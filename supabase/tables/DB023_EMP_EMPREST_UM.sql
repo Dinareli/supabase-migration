@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS "DB023_EMP_EMPREST_UM" (
+  "000_Empresa" text,
+  "001_LancAtivo" text,
+  "002_Cliente" text,
+  "003_CodInterno" text,
+  "004_CPF" text,
+  "005_IMEI" text,
+  "006_NumSerie" text,
+  "007_EMP_Atendente" text,
+  "008_EMP_Cliente" text,
+  "009_EMP_Cod_Lancamento" text,
+  "010_EMP_DataEmprestimo" text,
+  "011_EMP_Devolvido" text,
+  "012_EMP_Motivo" text,
+  "013_EMP_Observacoes" text,
+  "014_EMP_Produtos" text,
+  "015_ID-UNICO" text,
+  "Creation Date" text,
+  "Modified Date" text,
+  "Slug" text,
+  "Creator" text,
+  "unique_id" text NOT NULL,
+  CONSTRAINT "DB023_EMP-EMPREST-UMS_pkey" PRIMARY KEY ("unique_id")
+);
+ALTER TABLE "DB023_EMP_EMPREST_UM" ENABLE ROW LEVEL SECURITY;

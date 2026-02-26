@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS "DB033_LAN_INICIANTE_ATE" (
+  "000_Empresa" text,
+  "001_ATE_Vendedor" text,
+  "002_ATE_Cod_lancamento" text,
+  "003_ATE_DataVenda" text,
+  "004_ATE_Frete" text,
+  "005_ATE_Intencao" text,
+  "006_ATE_OBS_NaNota" text,
+  "007_ATE_Pagamento" text,
+  "008_ATE_TRO_Produtos" text,
+  "009_ATE_VEN_Produtos" text,
+  "010_Concretizada" text,
+  "011_CPFCliente" text,
+  "012_Criado_por" text,
+  "013_LancaEstoque" text,
+  "014_LancamentoAtivo" text,
+  "015_NomeCliente" text,
+  "016_TOTAL_BRUTO" text,
+  "017_TXT_INTENCAO" text,
+  "018_ID-UNICO" text,
+  "Creation Date" text,
+  "Modified Date" text,
+  "Slug" text,
+  "Creator" text,
+  "unique_id" text NOT NULL,
+  CONSTRAINT "DB033_LAN-INICIANTE-ATES_pkey" PRIMARY KEY ("unique_id")
+);
+ALTER TABLE "DB033_LAN_INICIANTE_ATE" ENABLE ROW LEVEL SECURITY;

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__supabase-personal-tenfront__list_tables",
+      "mcp__supabase-personal-tenfront__list_migrations",
+      "mcp__supabase-personal-tenfront__list_extensions"
+    ]
+  }
+}

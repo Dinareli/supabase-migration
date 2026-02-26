@@ -1,0 +1,31 @@
+CREATE TABLE IF NOT EXISTS "DB999_VERIF_CONTAS_PAGAR" (
+  "000_Empresa" text,
+  "ATE_Cod__01" text,
+  "CAP_Ativo__02" text,
+  "CAP_Caixa__03" text,
+  "CAP_Cod_lancamento__04" text,
+  "CAP_DataPagto__05" text,
+  "CAP_DescricaoPagto__06" text,
+  "CAP_FormaPagto__07" text,
+  "CAP_Ocorrencia__08" text,
+  "CAP_QtdParcelas__09" text,
+  "CAP_Quitado__10" text,
+  "CAP_Recorrencia__11" text,
+  "CAP_ValorBruto__12" text,
+  "CAP_ValorParcela__13" text,
+  "COM_Cod__14" text,
+  "Intencao__16" text,
+  "Lancador__17" text,
+  "Z-OPT [OS] FORMA_PAGTO" text,
+  "Z-OPT [OS] INTENCAO" text,
+  "Z-UNIQUE - ID-UNICO" text,
+  "ZSubtipo__18" text,
+  "Creation Date" text,
+  "Modified Date" text,
+  "Slug" text,
+  "Creator" text,
+  "unique_id" text NOT NULL,
+  CONSTRAINT "DB999_VERIF_CONTAS_PAGARS_pkey" PRIMARY KEY ("unique_id")
+);
+
+ALTER TABLE "DB999_VERIF_CONTAS_PAGAR" ENABLE ROW LEVEL SECURITY;

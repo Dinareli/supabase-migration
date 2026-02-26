@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS "DB025_FIN_HISTORICO_CAIXA" (
+  "000_Empresa" text,
+  "001_Aberto" text,
+  "002_DataAbertura" text,
+  "003_DataFechamento" text,
+  "004_CAIXA-ABERTO" text,
+  "005_PRODUTOS_Compras" text,
+  "006_PRODUTOS_Trocas" text,
+  "007_PRODUTOS_Vendas" text,
+  "008_QuemAbriu" text,
+  "009_QuemFechou" text,
+  "010_Valor_Boleto" text,
+  "011_Valor_Credito" text,
+  "012_Valor_Debito" text,
+  "013_Valor_Dinheiro" text,
+  "014_Valor_PIX" text,
+  "015_Valor_Taxas" text,
+  "016_Valor_TED" text,
+  "017_ID-ABRE_FECHA" text,
+  "018_ID-UNICO" text,
+  "Creation Date" text,
+  "Modified Date" text,
+  "Slug" text,
+  "Creator" text,
+  "unique_id" text NOT NULL,
+  CONSTRAINT "DB025_FIN_HISTORICO_CAIXAS_pkey" PRIMARY KEY ("unique_id")
+);
+ALTER TABLE "DB025_FIN_HISTORICO_CAIXA" ENABLE ROW LEVEL SECURITY;

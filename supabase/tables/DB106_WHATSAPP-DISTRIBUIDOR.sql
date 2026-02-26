@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS "DB106_WHATSAPP-DISTRIBUIDOR" (
+  "ULTIMO" bigint,
+  "Creation Date" text,
+  "Modified Date" text,
+  "Slug" text,
+  "Creator" text,
+  "unique_id" text NOT NULL,
+  CONSTRAINT "DB106_WHATSAPP_DISTRIBUIDORS_pkey" PRIMARY KEY ("unique_id")
+);
+
+ALTER TABLE "DB106_WHATSAPP-DISTRIBUIDOR" ENABLE ROW LEVEL SECURITY;

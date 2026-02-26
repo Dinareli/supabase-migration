@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS "DB006_CONF_ETIQUETAS" (
+  "000_Empresa" text,
+  "001_TIPO-PROD-OS" text,
+  "002_SUBTIPO-PROD-OS" text,
+  "003_NOME-PRODUTO" boolean DEFAULT false,
+  "004_IMEI" boolean DEFAULT false,
+  "005_NUM-SERIE" boolean DEFAULT false,
+  "006_SKU" boolean DEFAULT false,
+  "007_COD-INTERNO" boolean DEFAULT false,
+  "008_COR" boolean DEFAULT false,
+  "009_CATEGORIA" boolean DEFAULT false,
+  "010_BATERIA" boolean DEFAULT false,
+  "011_MEMORIA" boolean DEFAULT false,
+  "012_ARMAZENAMENTO" boolean DEFAULT false,
+  "013_ESPECIFICACOES" boolean DEFAULT false,
+  "014_SCAN-COD-BARRA" text,
+  "015_CONF-NOME-ETIQ" text,
+  "016_CONF-ALTU-ETIQ" real,
+  "017_CONF-LARG-ETIQ" real,
+  "018_CONF-LARG-COD" real,
+  "019_CONF-LOGO" text,
+  "020_PRECO-VENDA" boolean DEFAULT false,
+  "021_MODELO_IMPRESSAO" text,
+  "Creation Date" timestamp without time zone,
+  "Modified Date" timestamp without time zone,
+  "Slug" text,
+  "Creator" text,
+  "unique_id" text NOT NULL,
+  CONSTRAINT "DB006_CONF_ETIQUETAS_pkey" PRIMARY KEY ("unique_id")
+);
+
+ALTER TABLE "DB006_CONF_ETIQUETAS" ENABLE ROW LEVEL SECURITY;

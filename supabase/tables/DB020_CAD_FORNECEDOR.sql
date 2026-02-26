@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS "DB020_CAD_FORNECEDOR" (
+  "000_Empresa" text,
+  "001_ATIVO]" text,
+  "002_CPF / CNPJ]" text,
+  "003_Cód. Interno]" text,
+  "004_Tipo_Prod_vendido]" text,
+  "005_E-mail]" text,
+  "006_Endereço_Bairro]" text,
+  "007_Endereço_CEP]" text,
+  "008_Endereço_cidade]" text,
+  "009_Endereço_Endereço]" text,
+  "010_Endereço_número]" bigint,
+  "011_Endereço_UF]" text,
+  "012_Nome / Nome fantasia]" text,
+  "013_Nota_fornecedor]" text,
+  "014_PIX]" bigint,
+  "015_PJ_Insc_estadual]" text,
+  "016_PJ_Insc_municipal]" text,
+  "017_PJ_Razão social]" text,
+  "018_PJ_Tipo_contribuinte]" text,
+  "019_Telefone principal]" text,
+  "020_Telefone secundário]" text,
+  "021_Tipo_fornecedor]" text,
+  "022_ID-UNICO" text,
+  "Creation Date" text,
+  "Modified Date" text,
+  "Slug" text,
+  "Creator" text,
+  "unique_id" text NOT NULL,
+  CONSTRAINT "DB020_CAD-FORNECEDORS_pkey" PRIMARY KEY ("unique_id")
+);
+
+ALTER TABLE "DB020_CAD_FORNECEDOR" ENABLE ROW LEVEL SECURITY;

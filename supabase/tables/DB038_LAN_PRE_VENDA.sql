@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS "DB038_LAN_PRE_VENDA" (
+  "000_Empresa" text, "001_Ativo" text, "002_ATECOD" text, "003_Pre-COD-Lanca" text, "004_CriadoPor" text, "005_DATA_PREVENDA" text, "006_CLI-INFORMACOES" text, "007_CPF/CNPJ-CLIENTE" text, "008_NOME-CLIENTE" text, "009_INTENCAO" text, "010_STATUS" text, "011_VALOR-PRE-VENDA" text, "012_Vendedor" text, "013_Atendente" text, "014_Lista Produtos Troca" text, "015_Lista Produtos Troca Inicial" text, "016_Lista Produtos Venda" text, "017_Lista Produtos Venda Inicial" text, "018_Lista Produtos Brinde" text, "019_Lista Produtos Brinde Inicial" text, "020_Link Visualizacao" text, "021_QR-Code" text, "022_Frete" text, "023_Saldo devedor" text, "024_Pagamentos realizados" text, "025_Status Pagamento" text, "026_Tipo de pagamento" text, "027_Status Produtos" text, "028_Observacoes Externas" text, "029_Observacoes Internas" text, "030_Termo de garantia" text, "031_Possui anexos" text, "032_Documento Assinado" text, "033_URL Nota" text, "034_Link para assinatura" text, "035_Wasabi" text, "036_Data envio assinatura" text, "037_Ordem" bigint, "038_Lista Atualizacoes" text, "039_Cancelado Por" text, "040_Data cancelamento" text, "041_Motivo cancelamento" text,
+  "Creation Date" text, "Modified Date" text, "Slug" text, "Creator" text,
+  "unique_id" text NOT NULL,
+  CONSTRAINT "DB038_LAN-PRE-VENDAS_pkey" PRIMARY KEY ("unique_id")
+);
+ALTER TABLE "DB038_LAN_PRE_VENDA" ENABLE ROW LEVEL SECURITY;
