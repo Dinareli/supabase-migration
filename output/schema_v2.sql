@@ -112,6 +112,34 @@ create table empresas (
 create index idx_empresas_cnpj on empresas(cnpj) where cnpj is not null;
 create index idx_empresas_ativo on empresas(ativo) where ativo = true;
 
+-- Lista de empresas para uso em listas/dropdowns (fonte: própria tabela empresas)
+create or replace view empresas_lista as
+select id, nome from empresas where ativo = true order by nome;
+
+-- Relação N:N: "empresas_acesso" por empresa (lista de itens = outras empresas)
+create table empresa_empresas_acesso (
+  empresa_id bigint not null references empresas(id) on delete cascade,
+  empresa_acesso_id bigint not null references empresas(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (empresa_id, empresa_acesso_id),
+  constraint chk_empresa_acesso_diferente check (empresa_id <> empresa_acesso_id)
+);
+create index idx_empresa_empresas_acesso_empresa on empresa_empresas_acesso(empresa_id);
+create index idx_empresa_empresas_acesso_acesso on empresa_empresas_acesso(empresa_acesso_id);
+
+-- View: empresas com coluna empresas_acesso (array de IDs) para leitura
+create or replace view empresas_com_acesso as
+select
+  e.id, e.nome, e.ativo,
+  coalesce(
+    (select array_agg(eea.empresa_acesso_id order by emp.nome)
+     from empresa_empresas_acesso eea
+     join empresas emp on emp.id = eea.empresa_acesso_id
+     where eea.empresa_id = e.id),
+    '{}'
+  ) as empresas_acesso
+from empresas e;
+
 -- ============================================================================
 -- 4. CORE: USUARIOS (auth.users do Supabase e perfil)
 -- ============================================================================
