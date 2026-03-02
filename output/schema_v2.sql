@@ -172,22 +172,6 @@ create index idx_usuarios_empresa_web on usuarios(empresa_web_id);
 create index idx_usuarios_empresa_app on usuarios(empresa_app_id);
 create index idx_usuarios_ativo on usuarios(ativo) where ativo = true;
 
--- ============================================================================
--- 5. CORE: DISPOSITIVOS
--- ============================================================================
-create table dispositivos (
-  id bigint generated always as identity primary key,
-  bubble_unique_id text unique,
-
-  usuario_id bigint references usuarios(id),
-  tipo text,
-  push_token text,
-
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
-create index idx_dispositivos_usuario on dispositivos(usuario_id);
 
 -- ============================================================================
 -- 6. ASSINATURAS

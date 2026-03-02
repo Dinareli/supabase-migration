@@ -1,0 +1,4 @@
+# Credenciais e segredos
+.env
+.env.local
+.env.*.local
