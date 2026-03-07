@@ -70,7 +70,7 @@ begin
     count(*),
     coalesce(sum(os.lucro_os), 0)
   into v_fat_os, v_qtd_os, v_lucro_os
-  from ordens_servico os
+  from assistencia_ordens_servico os
   where os.empresa_id = p_empresa_id
     and os.ativo       = true
     and os.data_task  >= v_inicio
@@ -144,7 +144,7 @@ begin
     select
       date_trunc('month', os.data_task) as mes,
       sum(os.total_pago_cliente) as total
-    from ordens_servico os
+    from assistencia_ordens_servico os
     where os.empresa_id = p_empresa_id
       and os.ativo       = true
       and os.data_task  >= v_hist_inicio

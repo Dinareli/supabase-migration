@@ -59,7 +59,7 @@ create table usuarios (
   -- audit
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_usuarios_email on usuarios(email) where email is not null;
@@ -78,7 +78,7 @@ order by nome nulls last, id;
 -- ============================================================================
 
 -- Coluna created_by na tabela de junção (criada em 00015 sem esta coluna)
-alter table empresa_empresas_acesso add column created_by bigint references usuarios(id);
+alter table empresa_empresas_acesso add column created_by text;
 
 -- ============================================================================
 create table assinaturas (
@@ -124,7 +124,7 @@ create table assinaturas (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_assinaturas_empresa on assinaturas(empresa_id);
@@ -157,7 +157,7 @@ create table logs_atividade (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_logs_atividade_empresa on logs_atividade(empresa_id);
@@ -178,7 +178,7 @@ create table checklists (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_checklists_empresa on checklists(empresa_id);
@@ -200,7 +200,7 @@ create table conf_vinculacoes (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_conf_vinculacoes_empresa on conf_vinculacoes(empresa_id);
@@ -240,7 +240,7 @@ create table conf_etiquetas (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_conf_etiquetas_empresa on conf_etiquetas(empresa_id);
@@ -261,7 +261,7 @@ create table conf_termos_garantia (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_conf_termos_garantia_empresa on conf_termos_garantia(empresa_id);
@@ -283,7 +283,7 @@ create table conf_chaves_pix (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_conf_chaves_pix_empresa on conf_chaves_pix(empresa_id);
@@ -304,7 +304,7 @@ create table cidades_br (
   id_unico text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_cidades_br_uf on cidades_br(uf);
@@ -326,7 +326,7 @@ create table contas (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_contas_empresa on contas(empresa_id);
@@ -343,7 +343,7 @@ create table funcoes (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_funcoes_empresa on funcoes(empresa_id);
@@ -374,7 +374,7 @@ create table permissoes (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_permissoes_empresa on permissoes(empresa_id);
@@ -399,7 +399,7 @@ create table maquinas_cartao (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_maquinas_cartao_empresa on maquinas_cartao(empresa_id);
@@ -436,7 +436,7 @@ create table taxas_cartao (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_taxas_cartao_empresa on taxas_cartao(empresa_id);
@@ -465,7 +465,7 @@ create table conf_modelos_etiqueta (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_conf_modelos_etiqueta_empresa on conf_modelos_etiqueta(empresa_id);
@@ -485,7 +485,7 @@ create table categorias (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_categorias_empresa on categorias(empresa_id);
@@ -504,7 +504,7 @@ create table cores (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_cores_empresa on cores(empresa_id);
@@ -523,7 +523,7 @@ create table grupos (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_grupos_empresa on grupos(empresa_id);
@@ -543,7 +543,7 @@ create table locais_estoque (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_locais_estoque_empresa on locais_estoque(empresa_id);
@@ -563,7 +563,7 @@ create table marcas (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_marcas_empresa on marcas(empresa_id);
@@ -585,7 +585,7 @@ create table modelos_produto (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 -- ============================================================================
@@ -646,7 +646,7 @@ create table produtos (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_produtos_empresa on produtos(empresa_id);
@@ -713,7 +713,7 @@ create table clientes (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_clientes_empresa on clientes(empresa_id);
@@ -760,7 +760,7 @@ create table fornecedores (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_fornecedores_empresa on fornecedores(empresa_id);
@@ -780,7 +780,7 @@ create table avarias (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_avarias_empresa on avarias(empresa_id);
@@ -800,7 +800,7 @@ create table avarias_associadas (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_avarias_assoc_empresa on avarias_associadas(empresa_id);
@@ -916,7 +916,7 @@ create table atendimentos (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_atendimentos_empresa on atendimentos(empresa_id);
@@ -958,7 +958,7 @@ create table atendimentos_iniciante (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_ate_iniciante_empresa on atendimentos_iniciante(empresa_id);
@@ -1022,7 +1022,7 @@ create table pre_vendas (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_pre_vendas_empresa on pre_vendas(empresa_id);
@@ -1048,7 +1048,7 @@ create table pre_venda_itens (
   acrescimo numeric(12,2),
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_pv_itens_prevenda on pre_venda_itens(pre_venda_id);
@@ -1068,7 +1068,7 @@ create table pre_venda_atualizacoes (
   pagamento text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_pv_atualizacoes_prevenda on pre_venda_atualizacoes(pre_venda_id);
@@ -1121,7 +1121,7 @@ create table compras (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_compras_empresa on compras(empresa_id);
@@ -1153,7 +1153,7 @@ create table emprestimos (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_emprestimos_empresa on emprestimos(empresa_id);
@@ -1202,7 +1202,7 @@ create table transferencias (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_transferencias_empresa_orig on transferencias(empresa_origem_id);
@@ -1229,7 +1229,7 @@ create table simulacoes (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_simulacoes_empresa on simulacoes(empresa_id);
@@ -1253,7 +1253,7 @@ create table sim_pagamentos (
   id_unico text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_sim_pagamentos_simulacao on sim_pagamentos(simulacao_id);
@@ -1281,7 +1281,7 @@ create table sim_trocas (
   id_unico text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_sim_trocas_simulacao on sim_trocas(simulacao_id);
@@ -1307,7 +1307,7 @@ create table sim_vendas (
   id_unico text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_sim_vendas_simulacao on sim_vendas(simulacao_id);
@@ -1373,7 +1373,7 @@ create table garantias (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_garantias_empresa on garantias(empresa_id);
@@ -1425,7 +1425,7 @@ create table estoque_iniciante (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_estoque_ini_empresa on estoque_iniciante(empresa_id);
@@ -1530,7 +1530,7 @@ create table cap_car (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_cap_car_empresa on cap_car(empresa_id);
@@ -1566,7 +1566,7 @@ create table caixa_abertura_fechamento (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_caixa_af_empresa on caixa_abertura_fechamento(empresa_id);
@@ -1602,7 +1602,7 @@ create table historico_caixa (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_hist_caixa_empresa on historico_caixa(empresa_id);
@@ -1624,7 +1624,7 @@ create table subcategorias_dre (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_subcategorias_dre_empresa on subcategorias_dre(empresa_id);
@@ -1648,7 +1648,7 @@ create table precificador (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_precificador_empresa on precificador(empresa_id);
@@ -1672,7 +1672,7 @@ create table ncm_cest (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_ncm_cest_empresa on ncm_cest(empresa_id);
@@ -1758,7 +1758,7 @@ create table notas_fiscais (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_nf_empresa on notas_fiscais(empresa_id);
@@ -1856,7 +1856,7 @@ create table info_fiscal (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_info_fiscal_empresa on info_fiscal(empresa_id);
@@ -1891,7 +1891,7 @@ create table nfse_info_fiscal (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_nfse_info_empresa on nfse_info_fiscal(empresa_id);
@@ -1909,7 +1909,7 @@ create table nfse_servicos (
   nfse_ref text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_nfse_servicos_empresa on nfse_servicos(empresa_id);
@@ -1935,7 +1935,7 @@ create table rf_nfse (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_rf_nfse_empresa on rf_nfse(empresa_id);
@@ -1956,7 +1956,7 @@ create table rf_mva (
   estados_txt text,
   id_unico text,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 create index idx_rf_mva_empresa on rf_mva(empresa_id);
 
@@ -1972,7 +1972,7 @@ create table rf_icms (
   estados_txt text,
   id_unico text,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 create index idx_rf_icms_empresa on rf_icms(empresa_id);
 
@@ -1988,7 +1988,7 @@ create table rf_icms_st (
   estados_txt text,
   id_unico text,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 create index idx_rf_icms_st_empresa on rf_icms_st(empresa_id);
 
@@ -2004,7 +2004,7 @@ create table rf_fcp (
   estados_txt text,
   id_unico text,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 create index idx_rf_fcp_empresa on rf_fcp(empresa_id);
 
@@ -2024,7 +2024,7 @@ create table rf_ipi (
   wmbr_pessoa text,
   id_unico text,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 create index idx_rf_ipi_empresa on rf_ipi(empresa_id);
 
@@ -2043,7 +2043,7 @@ create table rf_pis (
   wmbr_pis_situacoes text,
   id_unico text,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 create index idx_rf_pis_empresa on rf_pis(empresa_id);
 
@@ -2062,7 +2062,7 @@ create table rf_cofins (
   wmbr_pessoa text,
   id_unico text,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 create index idx_rf_cofins_empresa on rf_cofins(empresa_id);
 
@@ -2124,7 +2124,7 @@ create table rf_icms_info (
   id_unico text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_rf_icms_info_empresa on rf_icms_info(empresa_id);
@@ -2160,7 +2160,7 @@ create table parametros_imposto (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_param_imposto_empresa on parametros_imposto(empresa_id);
@@ -2190,7 +2190,7 @@ create table ibs_cbs (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_ibs_cbs_empresa on ibs_cbs(empresa_id);
@@ -2221,7 +2221,7 @@ create table sat_atendimentos (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_sat_empresa on sat_atendimentos(empresa_id);
@@ -2229,7 +2229,7 @@ create index idx_sat_empresa on sat_atendimentos(empresa_id);
 -- ============================================================================
 -- 66. ORDENS DE SERVICO (a maior tabela - 111 cols no legado)
 -- ============================================================================
-create table ordens_servico (
+create table assistencia_ordens_servico (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
   empresa_id bigint not null references empresas(id),
@@ -2365,20 +2365,20 @@ create table ordens_servico (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
-create index idx_os_empresa on ordens_servico(empresa_id);
-create index idx_os_status on ordens_servico(empresa_id, status_os);
-create index idx_os_cliente on ordens_servico(cliente_id);
-create index idx_os_cod on ordens_servico(empresa_id, cod_os);
-create index idx_os_ativo on ordens_servico(empresa_id, ativo) where ativo = true;
-create index idx_os_data on ordens_servico(empresa_id, data_task);
+create index idx_os_empresa on assistencia_ordens_servico(empresa_id);
+create index idx_os_status on assistencia_ordens_servico(empresa_id, status_os);
+create index idx_os_cliente on assistencia_ordens_servico(cliente_id);
+create index idx_os_cod on assistencia_ordens_servico(empresa_id, cod_os);
+create index idx_os_ativo on assistencia_ordens_servico(empresa_id, ativo) where ativo = true;
+create index idx_os_data on assistencia_ordens_servico(empresa_id, data_task);
 
 -- ============================================================================
--- 67. PROJETOS
+-- 67. PROJETOS (assistencia)
 -- ============================================================================
-create table projetos (
+create table assistencia_projetos (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
   empresa_id bigint not null references empresas(id),
@@ -2390,15 +2390,15 @@ create table projetos (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
-create index idx_projetos_empresa on projetos(empresa_id);
+create index idx_assistencia_projetos_empresa on assistencia_projetos(empresa_id);
 
 -- ============================================================================
 -- 68. STATUS DE TAREFA (workflow steps)
 -- ============================================================================
-create table status_tarefa (
+create table assistencia_status_tarefa (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
   empresa_id bigint not null references empresas(id),
@@ -2406,22 +2406,22 @@ create table status_tarefa (
   nome text not null,
   cor text,
   ordem integer,
-  projeto_id bigint references projetos(id),
+  projeto_id bigint references assistencia_projetos(id),
   projeto_ref text,
   local_tipo text,
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
-create index idx_status_tarefa_empresa on status_tarefa(empresa_id);
-create index idx_status_tarefa_projeto on status_tarefa(projeto_id);
+create index idx_status_tarefa_empresa on assistencia_status_tarefa(empresa_id);
+create index idx_status_tarefa_projeto on assistencia_status_tarefa(projeto_id);
 
 -- ============================================================================
 -- 69. COMENTARIOS DE TAREFA
 -- ============================================================================
-create table comentarios_tarefa (
+create table assistencia_comentarios_tarefa (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
   empresa_id bigint not null references empresas(id),
@@ -2432,11 +2432,11 @@ create table comentarios_tarefa (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
-create index idx_comentarios_empresa on comentarios_tarefa(empresa_id);
-create index idx_comentarios_task on comentarios_tarefa(cod_task) where cod_task is not null;
+create index idx_comentarios_empresa on assistencia_comentarios_tarefa(empresa_id);
+create index idx_comentarios_task on assistencia_comentarios_tarefa(cod_task) where cod_task is not null;
 
 -- ============================================================================
 -- 70. VERIFICACAO: TASK CHECKLIST
@@ -2453,7 +2453,7 @@ create table checklist_items (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_checklist_items_empresa on checklist_items(empresa_id);
@@ -2484,7 +2484,7 @@ create table tickets_suporte (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_tickets_empresa on tickets_suporte(empresa_id);
@@ -2518,7 +2518,7 @@ create table documentos_assinados (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_docs_assinados_empresa on documentos_assinados(empresa_id);
@@ -2544,7 +2544,7 @@ create table crm_instancias (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_crm_instancias_empresa on crm_instancias(empresa_id);
@@ -2564,7 +2564,7 @@ create table crm_etapas (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_crm_etapas_empresa on crm_etapas(empresa_id);
@@ -2582,7 +2582,7 @@ create table crm_funis (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_crm_funis_empresa on crm_funis(empresa_id);
@@ -2615,7 +2615,7 @@ create table crm_eventos (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_crm_eventos_empresa on crm_eventos(empresa_id);
@@ -2639,7 +2639,7 @@ create table crm_dados_usuario (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_crm_dados_usuario_empresa on crm_dados_usuario(empresa_id);
@@ -2647,7 +2647,7 @@ create index idx_crm_dados_usuario_empresa on crm_dados_usuario(empresa_id);
 -- ============================================================================
 -- 78. CRM: TAREFAS CRM (Leads)
 -- ============================================================================
-create table tarefas_crm (
+create table assistencia_tarefas_crm (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
   empresa_id bigint not null references empresas(id),
@@ -2671,11 +2671,11 @@ create table tarefas_crm (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
-create index idx_tarefas_crm_empresa on tarefas_crm(empresa_id);
-create index idx_tarefas_crm_status on tarefas_crm(empresa_id, status);
+create index idx_tarefas_crm_empresa on assistencia_tarefas_crm(empresa_id);
+create index idx_tarefas_crm_status on assistencia_tarefas_crm(empresa_id, status);
 
 -- ============================================================================
 -- 79. METAS: GERAIS
@@ -2693,7 +2693,7 @@ create table metas_gerais (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_metas_gerais_empresa on metas_gerais(empresa_id);
@@ -2724,7 +2724,7 @@ create table metas_colaborador (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_metas_colab_empresa on metas_colaborador(empresa_id);
@@ -2743,7 +2743,7 @@ create table cupons (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 -- ============================================================================
@@ -2761,7 +2761,7 @@ create table lista_vip (
   id_unico text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 -- ============================================================================
@@ -2778,7 +2778,7 @@ create table notificacoes (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_notificacoes_empresa on notificacoes(empresa_id);
@@ -2799,7 +2799,7 @@ create table api_keys (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_api_keys_empresa on api_keys(empresa_id);
@@ -2819,7 +2819,7 @@ create table api_logs (
   -- authorization/keys removidos por seguranca no novo schema
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_api_logs_empresa on api_logs(empresa_id);
@@ -2841,7 +2841,7 @@ create table api_rate_limits (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_api_rate_empresa on api_rate_limits(empresa_id);
@@ -2857,7 +2857,7 @@ create table whatsapp_distribuidor (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 -- ============================================================================
@@ -2873,7 +2873,7 @@ create table changelog (
   publicacao timestamptz,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 -- ============================================================================
@@ -2892,7 +2892,7 @@ create table formularios (
   telefone jsonb,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 -- ============================================================================
@@ -2914,7 +2914,7 @@ create table nps_geral (
   func_mais_gosta text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_nps_geral_empresa on nps_geral(empresa_id);
@@ -2931,7 +2931,7 @@ create table estatisticas (
   valor numeric(14,2),
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_estatisticas_data on estatisticas(data);
@@ -2948,7 +2948,7 @@ create table engajamento (
   data timestamptz,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_engajamento_empresa on engajamento(empresa_id);
@@ -3048,7 +3048,7 @@ create table utilizacao_submodulos (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_util_submod_empresa on utilizacao_submodulos(empresa_id);
@@ -3070,7 +3070,7 @@ create table patrimonios (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_patrimonios_empresa on patrimonios(empresa_id);
@@ -3087,7 +3087,7 @@ create table checklist_avaliacao (
   reprovados text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 -- ============================================================================
@@ -3105,7 +3105,7 @@ create table carteiras (
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_carteiras_empresa on carteiras(empresa_id);
@@ -3130,7 +3130,7 @@ create table devocionais (
   audio text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 -- ============================================================================
@@ -3157,7 +3157,7 @@ create table pesquisa_churn (
   pressionou_responder_depois boolean not null default false,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_pesquisa_churn_empresa on pesquisa_churn(empresa_id);
@@ -3192,7 +3192,7 @@ create table verif_contas_pagar (
   id_unico text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_verif_cp_empresa on verif_contas_pagar(empresa_id);
@@ -3230,7 +3230,7 @@ create table verif_contas_receber (
   id_unico text,
 
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_verif_cr_empresa on verif_contas_receber(empresa_id);
@@ -3307,7 +3307,7 @@ create table usuario_fila (
   usuario_id bigint not null references usuarios(id) on delete cascade,
   fila text not null,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_uf_usuario on usuario_fila(usuario_id);
@@ -3340,7 +3340,7 @@ create table atendimento_produto (
   custo numeric(12,2),
   desconto numeric(12,2),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_ap_atendimento on atendimento_produto(atendimento_id);
@@ -3357,7 +3357,7 @@ create table atendimento_financeiro (
   cap_car_id bigint not null references cap_car(id),
   tipo text not null check (tipo in ('pagamento','custo','recebimento')),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_af_atendimento on atendimento_financeiro(atendimento_id);
@@ -3372,7 +3372,7 @@ create table atendimento_termo (
   atendimento_id bigint not null references atendimentos(id) on delete cascade,
   termo_id bigint not null references conf_termos_garantia(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_at_atendimento on atendimento_termo(atendimento_id);
@@ -3386,7 +3386,7 @@ create table atendimento_garantia (
   atendimento_id bigint not null references atendimentos(id) on delete cascade,
   garantia_id bigint not null references garantias(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_ag_atendimento on atendimento_garantia(atendimento_id);
@@ -3401,7 +3401,7 @@ create table atendimento_fiscal_pagamento (
   atendimento_id bigint not null references atendimentos(id) on delete cascade,
   cap_car_id bigint not null references cap_car(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_afp_atendimento on atendimento_fiscal_pagamento(atendimento_id);
@@ -3419,7 +3419,7 @@ create table pre_venda_produto (
   quantidade integer not null default 1,
   preco numeric(12,2),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_pvp_prevenda on pre_venda_produto(pre_venda_id);
@@ -3434,7 +3434,7 @@ create table pre_venda_pagamento (
   pre_venda_id bigint not null references pre_vendas(id) on delete cascade,
   cap_car_id bigint not null references cap_car(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_pvpag_prevenda on pre_venda_pagamento(pre_venda_id);
@@ -3451,7 +3451,7 @@ create table compra_produto (
   quantidade integer not null default 1,
   custo numeric(12,2),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_cp_compra on compra_produto(compra_id);
@@ -3466,7 +3466,7 @@ create table compra_financeiro (
   compra_id bigint not null references compras(id) on delete cascade,
   cap_car_id bigint not null references cap_car(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_cf_compra on compra_financeiro(compra_id);
@@ -3483,7 +3483,7 @@ create table nf_produto (
   quantidade integer not null default 1,
   valor numeric(12,2),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_nfp_nf on nf_produto(nf_id);
@@ -3499,7 +3499,7 @@ create table nf_servico (
   servico_id bigint not null references nfse_servicos(id),
   valor numeric(12,2),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_nfs_nf on nf_servico(nf_id);
@@ -3514,7 +3514,7 @@ create table nf_pagamento (
   nf_id bigint not null references notas_fiscais(id) on delete cascade,
   cap_car_id bigint not null references cap_car(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_nfpag_nf on nf_pagamento(nf_id);
@@ -3530,7 +3530,7 @@ create table emprestimo_produto (
   produto_id bigint not null references produtos(id),
   quantidade integer not null default 1,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_ep_emprestimo on emprestimo_produto(emprestimo_id);
@@ -3546,7 +3546,7 @@ create table historico_caixa_produto (
   produto_id bigint not null references produtos(id),
   tipo_transacao text not null check (tipo_transacao in ('compra','troca','venda')),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_hcp_historico on historico_caixa_produto(historico_id);
@@ -3577,7 +3577,7 @@ create table iniciante_ate_produto (
   produto_id bigint not null references produtos(id),
   tipo text not null check (tipo in ('venda','troca')),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_iap_iniciante on iniciante_ate_produto(iniciante_ate_id);
@@ -3592,7 +3592,7 @@ create table iniciante_ate_pagamento (
   iniciante_ate_id bigint not null references atendimentos_iniciante(id) on delete cascade,
   cap_car_id bigint not null references cap_car(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_iapag_iniciante on iniciante_ate_pagamento(iniciante_ate_id);
@@ -3610,7 +3610,7 @@ create table garantia_produto (
   custo_inicial numeric(12,2),
   preco numeric(12,2),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_gp_garantia on garantia_produto(garantia_id);
@@ -3625,7 +3625,7 @@ create table garantia_avaria (
   garantia_id bigint not null references garantias(id) on delete cascade,
   avaria_id bigint not null references avarias(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_ga_garantia on garantia_avaria(garantia_id);
@@ -3637,12 +3637,12 @@ create index idx_ga_avaria on garantia_avaria(avaria_id);
 -- ============================================================================
 create table os_checklist (
   id bigint generated always as identity primary key,
-  os_id bigint not null references ordens_servico(id) on delete cascade,
+  os_id bigint not null references assistencia_ordens_servico(id) on delete cascade,
   checklist_item_id bigint not null references checklist_items(id),
   tipo text not null check (tipo in ('principal','origem','problema','problema_inicial','posterior','posterior_origem','posterior_lista')),
   is_snapshot boolean not null default false,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_osc_os on os_checklist(os_id);
@@ -3654,13 +3654,13 @@ create index idx_osc_item on os_checklist(checklist_item_id);
 -- ============================================================================
 create table os_peca (
   id bigint generated always as identity primary key,
-  os_id bigint not null references ordens_servico(id) on delete cascade,
+  os_id bigint not null references assistencia_ordens_servico(id) on delete cascade,
   produto_id bigint not null references produtos(id),
   origem text not null check (origem in ('interna','externa')),
   custo numeric(12,2),
   quantidade integer not null default 1,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_osp_os on os_peca(os_id);
@@ -3672,11 +3672,11 @@ create index idx_osp_produto on os_peca(produto_id);
 -- ============================================================================
 create table os_servico (
   id bigint generated always as identity primary key,
-  os_id bigint not null references ordens_servico(id) on delete cascade,
+  os_id bigint not null references assistencia_ordens_servico(id) on delete cascade,
   descricao text not null,
   preco numeric(12,2),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_oss_os on os_servico(os_id);
@@ -3687,10 +3687,10 @@ create index idx_oss_os on os_servico(os_id);
 -- ============================================================================
 create table os_financeiro (
   id bigint generated always as identity primary key,
-  os_id bigint not null references ordens_servico(id) on delete cascade,
+  os_id bigint not null references assistencia_ordens_servico(id) on delete cascade,
   cap_car_id bigint not null references cap_car(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_osf_os on os_financeiro(os_id);
@@ -3702,11 +3702,11 @@ create index idx_osf_capcar on os_financeiro(cap_car_id);
 -- ============================================================================
 create table projeto_membro (
   id bigint generated always as identity primary key,
-  projeto_id bigint not null references projetos(id) on delete cascade,
+  projeto_id bigint not null references assistencia_projetos(id) on delete cascade,
   usuario_id bigint not null references usuarios(id) on delete cascade,
   unique(projeto_id, usuario_id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_pm_projeto on projeto_membro(projeto_id);
@@ -3741,7 +3741,7 @@ create table funil_etapa (
   ordem integer not null,
   unique(funil_id, etapa_id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_fe_funil on funil_etapa(funil_id);
@@ -3771,7 +3771,7 @@ create table cliente_credito (
   cap_car_id bigint not null references cap_car(id),
   tipo text not null check (tipo in ('entrada','saida')),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_cc_cliente on cliente_credito(cliente_id);
@@ -3803,7 +3803,7 @@ create table produto_especificacao (
   chave text not null,
   valor text not null,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_pe_produto on produto_especificacao(produto_id);
@@ -3817,7 +3817,7 @@ create table devocional_keyword (
   devocional_id bigint not null references devocionais(id) on delete cascade,
   keyword text not null,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_dk_devocional on devocional_keyword(devocional_id);
@@ -3832,7 +3832,7 @@ create table carteira_recarga (
   valor numeric(14,2) not null,
   descricao text,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_cr_carteira on carteira_recarga(carteira_id);
@@ -3847,7 +3847,7 @@ create table checklist_lista_item (
   texto text not null,
   ordem integer,
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_cli_checklist on checklist_lista_item(checklist_id);
@@ -3864,9 +3864,9 @@ create index idx_cli_checklist on checklist_lista_item(checklist_id);
 create table ticket_comentario (
   id bigint generated always as identity primary key,
   ticket_id bigint not null references tickets_suporte(id) on delete cascade,
-  comentario_id bigint not null references comentarios_tarefa(id),
+  comentario_id bigint not null references assistencia_comentarios_tarefa(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_tc_ticket on ticket_comentario(ticket_id);
@@ -3877,10 +3877,10 @@ create index idx_tc_ticket on ticket_comentario(ticket_id);
 -- ============================================================================
 create table tarefa_crm_comentario (
   id bigint generated always as identity primary key,
-  tarefa_crm_id bigint not null references tarefas_crm(id) on delete cascade,
-  comentario_id bigint not null references comentarios_tarefa(id),
+  tarefa_crm_id bigint not null references assistencia_tarefas_crm(id) on delete cascade,
+  comentario_id bigint not null references assistencia_comentarios_tarefa(id),
   created_at timestamptz not null default now(),
-  created_by bigint references usuarios(id)
+  created_by text
 );
 
 create index idx_tcc_tarefa on tarefa_crm_comentario(tarefa_crm_id);
@@ -3970,10 +3970,10 @@ comment on table ibs_cbs is 'Regras fiscais IBS/CBS da reforma tributaria brasil
 comment on table sat_atendimentos is 'Resumo fiscal de atendimentos para integracao SAT. Espelha dados-chave do atendimento.';
 
 -- OS / Projetos
-comment on table ordens_servico is 'Ordens de servico (OS) para assistencia tecnica. Tabela mais complexa do sistema (~100 colunas). Dados do aparelho, orcamento, pagamento, pecas, checklist e documentos.';
-comment on table projetos is 'Projetos de gerenciamento de tarefas/OS por empresa. Agrupa ordens de servico e tarefas.';
-comment on table status_tarefa is 'Etapas/status do workflow de tarefas/OS dentro de um projeto (ex: Aberto, Em andamento, Finalizado). Ordenavel.';
-comment on table comentarios_tarefa is 'Comentarios/notas em tarefas e OS. Vinculado via cod_task (text). TODO: migrar para FK proper.';
+comment on table assistencia_ordens_servico is 'Ordens de servico (OS) para assistencia tecnica. Tabela mais complexa do sistema (~100 colunas). Dados do aparelho, orcamento, pagamento, pecas, checklist e documentos.';
+comment on table assistencia_projetos is 'Projetos de gerenciamento de tarefas/OS por empresa. Agrupa ordens de servico e tarefas.';
+comment on table assistencia_status_tarefa is 'Etapas/status do workflow de tarefas/OS dentro de um projeto (ex: Aberto, Em andamento, Finalizado). Ordenavel.';
+comment on table assistencia_comentarios_tarefa is 'Comentarios/notas em tarefas e OS. Vinculado via cod_task (text). TODO: migrar para FK proper.';
 comment on table checklist_items is 'Itens individuais de checklist vinculados a OS via os_cod (text). Registra estado feito/pendente. TODO: migrar para FK proper.';
 
 -- Suporte / Documentos
@@ -3986,7 +3986,7 @@ comment on table crm_etapas is 'Etapas do funil CRM (ex: Novo lead, Qualificado,
 comment on table crm_funis is 'Funis de vendas CRM por empresa. Etapas vinculadas via funil_etapa junction.';
 comment on table crm_eventos is 'Eventos/atividades CRM (reuniao, ligacao, visita) com datas, tipo, prioridade e responsavel.';
 comment on table crm_dados_usuario is 'Metricas de performance CRM por usuario: atendimentos finalizados, transferidos e atendidos.';
-comment on table tarefas_crm is 'Leads/tarefas do CRM com fase do funil, origem, interesse e responsavel. Comentarios via tarefa_crm_comentario.';
+comment on table assistencia_tarefas_crm is 'Leads/tarefas do CRM com fase do funil, origem, interesse e responsavel. Comentarios via tarefa_crm_comentario.';
 
 -- Metas
 comment on table metas_gerais is 'Metas gerais da empresa por periodo (mensal/semanal) com tipo e dias uteis.';
@@ -4169,10 +4169,10 @@ alter table ibs_cbs enable row level security;
 alter table sat_atendimentos enable row level security;
 
 -- CRM / Support
-alter table ordens_servico enable row level security;
-alter table projetos enable row level security;
-alter table status_tarefa enable row level security;
-alter table comentarios_tarefa enable row level security;
+alter table assistencia_ordens_servico enable row level security;
+alter table assistencia_projetos enable row level security;
+alter table assistencia_status_tarefa enable row level security;
+alter table assistencia_comentarios_tarefa enable row level security;
 alter table checklist_items enable row level security;
 alter table tickets_suporte enable row level security;
 alter table documentos_assinados enable row level security;
@@ -4181,7 +4181,7 @@ alter table crm_etapas enable row level security;
 alter table crm_funis enable row level security;
 alter table crm_eventos enable row level security;
 alter table crm_dados_usuario enable row level security;
-alter table tarefas_crm enable row level security;
+alter table assistencia_tarefas_crm enable row level security;
 
 -- Goals / Marketing / Analytics / API / Utility
 alter table metas_gerais enable row level security;
@@ -4312,10 +4312,10 @@ begin
       'notas_fiscais','info_fiscal','nfse_info_fiscal','nfse_servicos',
       'rf_nfse','rf_mva','rf_icms','rf_icms_st','rf_fcp','rf_ipi',
       'rf_pis','rf_cofins','rf_icms_info','parametros_imposto','ibs_cbs',
-      'sat_atendimentos','ordens_servico','projetos','status_tarefa',
-      'comentarios_tarefa','checklist_items','tickets_suporte',
+      'sat_atendimentos','assistencia_ordens_servico','assistencia_projetos','assistencia_status_tarefa',
+      'assistencia_comentarios_tarefa','checklist_items','tickets_suporte',
       'documentos_assinados','crm_instancias','crm_etapas','crm_funis',
-      'crm_eventos','crm_dados_usuario','tarefas_crm','metas_gerais',
+      'crm_eventos','crm_dados_usuario','assistencia_tarefas_crm','metas_gerais',
       'metas_colaborador','notificacoes','api_keys','api_logs',
       'api_rate_limits','nps_geral','engajamento','utilizacao_submodulos',
       'patrimonios','carteiras','pesquisa_churn','verif_contas_pagar',
@@ -4382,10 +4382,10 @@ begin
       'historico_caixa','subcategorias_dre','precificador',
       'ncm_cest','notas_fiscais','info_fiscal','nfse_info_fiscal',
       'rf_nfse','rf_icms_info','parametros_imposto','ibs_cbs',
-      'sat_atendimentos','ordens_servico','projetos','status_tarefa',
-      'comentarios_tarefa','checklist_items','tickets_suporte',
+      'sat_atendimentos','assistencia_ordens_servico','assistencia_projetos','assistencia_status_tarefa',
+      'assistencia_comentarios_tarefa','checklist_items','tickets_suporte',
       'documentos_assinados','crm_instancias','crm_etapas','crm_funis',
-      'crm_eventos','crm_dados_usuario','tarefas_crm',
+      'crm_eventos','crm_dados_usuario','assistencia_tarefas_crm',
       'metas_gerais','metas_colaborador','notificacoes',
       'api_keys','api_rate_limits','whatsapp_distribuidor',
       'utilizacao_submodulos','patrimonios','carteiras'
@@ -4461,11 +4461,11 @@ end $$;
 -- | "DB075_SIM_PAGAMENTO"            | sim_pagamentos            | FK simulacao_id                |
 -- | "DB076_SIM_TROCA"                | sim_trocas                | FK simulacao_id                |
 -- | "DB077_SIM_VENDA"                | sim_vendas                | FK simulacao_id                |
--- | "DB078_TREL_COMENT_TAREFA"       | comentarios_tarefa        |                                |
--- | "DB079_TREL_PROJETO"             | projetos                  | + projeto_membro               |
--- | "DB080_TREL_STATUS_TAREFA"       | status_tarefa             |                                |
--- | "DB081_TREL_TAREFA_CRM"          | tarefas_crm               | + tarefa_crm_comentario        |
--- | "DB082_TREL_TAREFA_MANUT"        | ordens_servico            | + os_checklist/peca/servico/fin|
+-- | "DB078_TREL_COMENT_TAREFA"       | assistencia_comentarios_tarefa |                        |
+-- | "DB079_TREL_PROJETO"             | assistencia_projetos      | + projeto_membro               |
+-- | "DB080_TREL_STATUS_TAREFA"       | assistencia_status_tarefa |                                |
+-- | "DB081_TREL_TAREFA_CRM"          | assistencia_tarefas_crm   | + tarefa_crm_comentario        |
+-- | "DB082_TREL_TAREFA_MANUT"        | assistencia_ordens_servico| + os_checklist/peca/servico/fin|
 -- | "DB086_UTIL_PRECIFICADOR"        | precificador              |                                |
 -- | "DB087_CRM_INSTANCIAS"           | crm_instancias            | + usuario_instancia            |
 -- | "DB088_CRM_ETAPAS"               | crm_etapas                |                                |
