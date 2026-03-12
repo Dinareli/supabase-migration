@@ -12,6 +12,12 @@
 --   Multi-tenancy: empresa_id referenciando empresas(id)
 --   Naming: snake_case sem aspas
 --   Soft delete: coluna "ativo" boolean default true
+--
+-- ORDEM DAS COLUNAS (migracao 1:1):
+--   Cada tabela que corresponde a uma tabela Bubble tem: id, bubble_unique_id,
+--   depois as N colunas na MESMA ORDEM dos campos 1..N do bubble-schema.md.
+--   Ver output/ORDEM_COLUNAS_BUBBLE.md e comentarios "-- Colunas na ordem DBxxx"
+--   em cada create table.
 -- ============================================================================
 
 -- ============================================================================
@@ -34,76 +40,64 @@ $$ language plpgsql;
 
 -- ============================================================================
 -- 3. CORE: EMPRESAS
+-- Colunas na ordem DB002_EMPRESAS (1-53) para migracao 1:1
 -- ============================================================================
 create table empresas (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-
-  -- dados cadastrais
-  nome text not null,
   cnpj text,
-  email text,
-  telefone text,
-  instagram text,
-  endereco text,
-  logo_url text,
-  slug text,
-
-  -- plano / assinatura
-  plano text,
-  recorrencia text,
-  acesso_ate timestamptz,
-  ultimo_acesso timestamptz,
-  limite_usuarios integer,
-  qtd_vendedores integer,
-  usuario_adicional integer,
-
-  -- flags
-  ativo boolean not null default true,
-  cadastro_completo boolean not null default false,
-  primeiro_acesso boolean not null default true,
-  aguardando_aprovacao boolean not null default true,
-  beta boolean not null default false,
-  super_beta boolean not null default false,
-  novos_modelos boolean not null default false,
-  novas_cores boolean not null default false,
-  info_pagto_assinatura boolean not null default false,
-  assinatura_irregular boolean not null default false,
-  primeiro_pagto boolean not null default false,
-  adiciona_dias boolean not null default false,
-
-  -- fiscal
-  fiscal_ativo boolean not null default false,
-  fiscal_cnpj text,
-  fiscal_ie text,
-  regime_tributario text,
-  certificado_ref text,
-  rf_fiscal_ref text,
-
-  -- add-ons
-  addon_assistencia boolean not null default true,
-  addon_emp_fiscal text,
-  addon_os_planos text,
-
-  -- integracao
-  asaas_customer_id text,
-  assinatura_ref text,
   api_key text,
-  project_ref text,
-  carteira_ref text,
-  engajamento_ref text,
+  instagram text,
+  acesso_ate timestamptz,
   fatura_url text,
-  configuracoes_gerais jsonb,
-
-  -- CRM
-  crm_acesso_ate timestamptz,
-
-  -- termos
-  termos text,
+  asaas_customer_id text,
+  nome text not null,
+  engajamento_ref text,
+  fiscal_ie text,
+  beta boolean not null default false,
   termo_empresa text,
+  qtd_vendedores integer,
+  recorrencia text,
+  fiscal_cnpj text,
+  comercial_status text,
+  primeiro_acesso boolean not null default true,
+  endereco text,
+  telefone text,
+  limite_usuarios integer,
+  logo_url text,
+  plano text,
+  addon_os_planos text,
+  novas_cores boolean not null default false,
+  certificado_ref text,
+  adiciona_dias boolean not null default false,
+  primeiro_pagto boolean not null default false,
+  fiscal_ativo boolean not null default false,
+  cadastro_completo boolean not null default false,
+  id_unico text,
+  novos_modelos boolean not null default false,
+  super_beta boolean not null default false,
+  email text,
+  ultimo_acesso timestamptz,
+  usuario_adicional integer,
+  crm_acesso_ate timestamptz,
+  info_pagto_assinatura boolean not null default false,
+  project_ref text,
+  assinatura_irregular boolean not null default false,
+  addon_emp_fiscal text,
+  addon_assistencia boolean not null default true,
+  engajamento_count_2025 numeric(12,2),
+  engajamento_count_2026 numeric(12,2),
+  aguardando_aprovacao boolean not null default true,
+  regime_tributario text,
+  carteira_ref text,
+  assinatura_ref text,
   id_visual text,
-
-  -- audit
+  rf_fiscal_ref text,
+  termos text,
+  configuracoes_gerais jsonb,
+  regime_trib text,
+  ativo boolean not null default true,
+  slug text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -210,48 +204,38 @@ order by nome nulls last, id;
 
 -- ============================================================================
 -- 6. ASSINATURAS
+-- Colunas na ordem DB001_ASSINATURA (1-27) para migracao 1:1
 -- ============================================================================
 create table assinaturas (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  -- asaas
-  asaas_customer_id text,
-  asaas_descricao text,
-  asaas_parcela numeric(12,2),
+  cupom_ativado text,
   asaas_evento text,
   asaas_status text,
-  asaas_valor_recebido numeric(12,2),
-
-  -- dados
   mensalidade numeric(12,2),
-  plano text,
+  d_token text,
+  asaas_customer_id text,
+  asaas_valor_recebido numeric(12,2),
+  asaas_descricao text,
+  asaas_parcela numeric(12,2),
   recorrencia text,
   total_pago numeric(12,2),
-  ticket_medio numeric(12,2),
-
-  -- datas
-  data_criacao_assinatura timestamptz,
-  data_acesso_ate timestamptz,
-  data_cancelamento timestamptz,
-
-  -- flags
-  ativo boolean not null default false,
   cancelado boolean not null default false,
-  motivo_cancelamento text,
-  tipo_motivo_cancelamento text,
-
-  -- assinante
-  nome_assinante text,
-  contato_assinante text,
-  cidade_assinante text,
   uf_assinante text,
-  observacoes text,
+  ticket_medio numeric(12,2),
+  nome_assinante text,
+  data_acesso_ate timestamptz,
+  empresa_id bigint not null references empresas(id),
+  cidade_assinante text,
   forma_entrada text,
-  cupom_ativado text,
-  d_token text,
-
+  data_cancelamento timestamptz,
+  contato_assinante text,
+  plano text,
+  ativo boolean not null default false,
+  motivo_cancelamento text,
+  observacoes text,
+  data_criacao_assinatura timestamptz,
+  tipo_motivo_cancelamento text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -263,28 +247,27 @@ create index idx_assinaturas_ativo on assinaturas(ativo) where ativo = true;
 -- ============================================================================
 -- 7. CONFIGURACAO: LOGS DE ATIVIDADE
 -- ============================================================================
+-- Colunas na ordem DB003_LOG (1-17) para migracao 1:1
 create table logs_atividade (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
   acao text,
-  botao text,
   tela text,
+  botao text,
   codigo text,
   usuario_ref text,
-  cliente_fornecedor text,
   info_deletada text,
   info_modificada text,
-  info_modificada_bateria numeric(12,2),
-  info_modificada_custo numeric(12,2),
+  cliente_fornecedor text,
+  id_unico text,
+  empresa_id bigint not null references empresas(id),
+  info_modificada_qtd numeric(12,2),
   info_modificada_imei text,
   info_modificada_obs_externa text,
   info_modificada_obs_interna text,
+  info_modificada_custo numeric(12,2),
+  info_modificada_bateria numeric(12,2),
   info_modificada_produtos text,
-  info_modificada_qtd numeric(12,2),
-  id_unico text,
-
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -296,16 +279,15 @@ create index idx_logs_atividade_created on logs_atividade(created_at);
 -- ============================================================================
 -- 8. CONFIGURACAO: CHECKLISTS
 -- ============================================================================
+-- Colunas na ordem DB004_CHECKLIST (1-6) para migracao 1:1
 create table checklists (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
   codigo text,
   descricao text,
+  ativo boolean not null default true,
+  empresa_id bigint not null references empresas(id),
   tipo_uso text,
-
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -316,18 +298,17 @@ create index idx_checklists_empresa on checklists(empresa_id);
 -- ============================================================================
 -- 9. CONFIGURACAO: VINCULACOES (forma pagto <-> conta)
 -- ============================================================================
+-- Colunas na ordem DB005_CONF_VINCULACAO (1-7) para migracao 1:1
 create table conf_vinculacoes (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
   compensacao integer,
   conta text,
-  forma_pagto text,
-  forma_pagto_txt text,
+  ativo boolean not null default true,
   id_unico text,
-
+  empresa_id bigint not null references empresas(id),
+  forma_pagto_txt text,
+  forma_pagto text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -338,36 +319,32 @@ create index idx_conf_vinculacoes_empresa on conf_vinculacoes(empresa_id);
 -- ============================================================================
 -- 10. CONFIGURACAO: ETIQUETAS (config de impressao)
 -- ============================================================================
+-- Colunas na ordem DB006_CONF_ETIQUETAS (1-22) para migracao 1:1
 create table conf_etiquetas (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  -- campos visiveis na etiqueta
-  tipo_prod_os text,
-  subtipo_prod_os text,
-  exibir_nome_produto boolean not null default false,
-  exibir_imei boolean not null default false,
-  exibir_num_serie boolean not null default false,
   exibir_sku boolean not null default false,
-  exibir_cod_interno boolean not null default false,
   exibir_cor boolean not null default false,
-  exibir_categoria boolean not null default false,
+  exibir_imei boolean not null default false,
   exibir_bateria boolean not null default false,
   exibir_memoria boolean not null default false,
-  exibir_armazenamento boolean not null default false,
-  exibir_especificacoes boolean not null default false,
-  exibir_preco_venda boolean not null default false,
-
-  -- config impressao
+  logo_url text,
+  exibir_num_serie boolean not null default false,
+  exibir_categoria boolean not null default false,
+  empresa_id bigint not null references empresas(id),
+  exibir_cod_interno boolean not null default false,
   scan_cod_barra text,
   nome_etiqueta text,
+  exibir_preco_venda boolean not null default false,
+  exibir_nome_produto boolean not null default false,
+  largura_codigo numeric(8,2),
+  exibir_armazenamento boolean not null default false,
   altura_etiqueta numeric(8,2),
   largura_etiqueta numeric(8,2),
-  largura_codigo numeric(8,2),
-  logo_url text,
+  exibir_especificacoes boolean not null default false,
+  tipo_prod_os text,
+  subtipo_prod_os text,
   modelo_impressao text,
-
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -378,17 +355,16 @@ create index idx_conf_etiquetas_empresa on conf_etiquetas(empresa_id);
 -- ============================================================================
 -- 11. CONFIGURACAO: TERMOS DE GARANTIA
 -- ============================================================================
+-- Colunas na ordem DB007_CONF_TERMO_GARANTIA (1-6) para migracao 1:1
 create table conf_termos_garantia (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
   ativo boolean not null default true,
-  uso_termo text,
+  padrao boolean,
   titulo text,
+  empresa_id bigint not null references empresas(id),
   texto text,
-  padrao boolean not null default false,
-
+  uso_termo text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -399,17 +375,17 @@ create index idx_conf_termos_garantia_empresa on conf_termos_garantia(empresa_id
 -- ============================================================================
 -- 12. CONFIGURACAO: CHAVES PIX
 -- ============================================================================
+-- Colunas na ordem DB008_CONF_CHAVE PIX (1-7) para migracao 1:1
 create table conf_chaves_pix (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
-  conta text,
+  ativo boolean,
   chave_pix text,
-  forma_pagto text,
-  forma_pagto_txt text,
   id_unico text,
+  forma_pagto_txt text,
+  conta text,
+  empresa_id bigint not null references empresas(id),
+  forma_pagto text,
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -421,18 +397,17 @@ create index idx_conf_chaves_pix_empresa on conf_chaves_pix(empresa_id);
 -- ============================================================================
 -- 13. REFERENCIA: CIDADES BRASILEIRAS
 -- ============================================================================
+-- Colunas na ordem DB009_CONF_CIDADES_BR (1-7) para migracao 1:1
 create table cidades_br (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-
   nome text not null,
-  nome_normalizado text,
-  uf text not null,
-  uf_texto text,
   ibge integer,
+  uf_text text,
   estado_txt text,
   id_unico text,
-
+  uf text not null,
+  nome_normalizado text,
   created_at timestamptz not null default now(),
   created_by text
 );
@@ -444,16 +419,15 @@ create index idx_cidades_br_nome on cidades_br(nome_normalizado);
 -- ============================================================================
 -- 14. CONFIGURACAO: CONTAS FINANCEIRAS
 -- ============================================================================
+-- Colunas na ordem DB010_CONF_CONTA (1-5) para migracao 1:1
 create table contas (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
   nome text not null,
+  ativo boolean not null default true,
   saldo numeric(14,2) not null default 0,
   id_unico text,
-
+  empresa_id bigint not null references empresas(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -464,13 +438,12 @@ create index idx_contas_empresa on contas(empresa_id);
 -- ============================================================================
 -- 15. CONFIGURACAO: FUNCOES (roles de usuario)
 -- ============================================================================
+-- Colunas na ordem DB011_CONF_FUNCOES (1-3) para migracao 1:1
 create table funcoes (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
   nome text not null,
-
+  empresa_id bigint not null references empresas(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -513,20 +486,19 @@ create index idx_permissoes_funcao on permissoes(funcao_id);
 -- ============================================================================
 -- 17. CONFIGURACAO: MAQUINAS DE CARTAO
 -- ============================================================================
+-- Colunas na ordem DB012_CONF_MAQUINA (1-9) para migracao 1:1
 create table maquinas_cartao (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
-  desativado boolean not null default false,
-  conta text,
   maquina text,
-  forma_pagto text,
+  desativado boolean not null default false,
+  ativo boolean not null default true,
   tempo_compensacao integer not null default 0,
-  forma_pagto_txt text,
   id_unico text,
-
+  empresa_id bigint not null references empresas(id),
+  forma_pagto_txt text,
+  conta text,
+  forma_pagto text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -603,16 +575,15 @@ create index idx_conf_modelos_etiqueta_empresa on conf_modelos_etiqueta(empresa_
 -- ============================================================================
 -- 20. PRODUTOS: CATEGORIAS
 -- ============================================================================
+-- Colunas na ordem DB057_PROD_CATEGORIA (1-5) para migracao 1:1
 create table categorias (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
-  deletavel boolean not null default true,
   nome text not null,
+  deletavel boolean not null default true,
+  ativo boolean not null default true,
   id_unico text,
-
+  empresa_id bigint not null references empresas(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -623,15 +594,15 @@ create index idx_categorias_empresa on categorias(empresa_id);
 -- ============================================================================
 -- 21. PRODUTOS: CORES
 -- ============================================================================
+-- Colunas na ordem DB058_PROD_COR (1-5) para migracao 1:1
 create table cores (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
+  remover boolean,
   nome text not null,
+  ativo boolean not null default true,
   id_unico text,
-
+  empresa_id bigint not null references empresas(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -642,15 +613,14 @@ create index idx_cores_empresa on cores(empresa_id);
 -- ============================================================================
 -- 22. PRODUTOS: GRUPOS
 -- ============================================================================
+-- Colunas na ordem DB059_PROD_GRUPO (1-4) para migracao 1:1
 create table grupos (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
   nome text not null,
+  ativo boolean not null default true,
   id_unico text,
-
+  empresa_id bigint not null references empresas(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -661,16 +631,15 @@ create index idx_grupos_empresa on grupos(empresa_id);
 -- ============================================================================
 -- 23. PRODUTOS: LOCAIS DE ESTOQUE
 -- ============================================================================
+-- Colunas na ordem DB060_PROD_LOCAL (1-5) para migracao 1:1
 create table locais_estoque (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
   nome text not null,
+  ativo boolean,
+  empresa_id bigint not null references empresas(id),
   cor_identificacao text,
   finalidade text,
-
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -681,16 +650,15 @@ create index idx_locais_estoque_empresa on locais_estoque(empresa_id);
 -- ============================================================================
 -- 24. PRODUTOS: MARCAS
 -- ============================================================================
+-- Colunas na ordem DB061_PROD_MARCA (1-5) para migracao 1:1
 create table marcas (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
   nome text not null,
+  ativo boolean not null default true,
   criado_admin boolean not null default false,
   id_unico text,
-
+  empresa_id bigint not null references empresas(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -721,59 +689,48 @@ create table modelos_produto (
 -- ============================================================================
 -- 26. PRODUTOS: CATALOGO
 -- ============================================================================
+-- Colunas na ordem DB062_PROD_PRODUTO (1-38) para migracao 1:1
 create table produtos (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
+  remover boolean,
   ativo boolean not null default true,
   nome text not null,
-  nome_concatenado text,
+  estoque_maximo numeric(12,2),
+  estoque_minimo numeric(12,2),
+  troca_maximo numeric(12,2),
+  troca_minimo numeric(12,2),
   sku text,
-  cod_interno text,
-
-  -- precos
+  marca_id bigint references marcas(id),
   preco_varejo numeric(12,2),
-  preco_atacado numeric(12,2),
-  preco_ajustado numeric(12,2),
-  custo_medio numeric(12,2),
   custo_total_acessorios numeric(12,2),
   venda_total_acessorios numeric(12,2),
+  grupo_id bigint references grupos(id),
+  saldo_estoque numeric(12,2) not null default 0,
+  txt_memoria text,
+  nome_concatenado text,
+  id_unico text,
   custo_externa numeric(12,2),
   custo_interna numeric(12,2),
-
-  -- estoque
-  saldo_estoque numeric(12,2) not null default 0,
-  estoque_minimo numeric(12,2),
-  estoque_maximo numeric(12,2),
-  troca_minimo numeric(12,2),
-  troca_maximo numeric(12,2),
-  saldo_fiscal numeric(12,2),
-  emp_saldo_fiscal numeric(12,2),
-  estoque_acessorio numeric(12,2),
-
-  -- classificacao
+  preco_ajustado numeric(12,2),
   categoria_id bigint references categorias(id),
-  grupo_id bigint references grupos(id),
-  marca_id bigint references marcas(id),
-  cor_ref text,
+  empresa_id bigint not null references empresas(id),
+  saldo_fiscal numeric(12,2),
   memoria text,
+  cod_interno text,
+  txt_tipo_produto text,
+  txt_especificacoes text,
+  preco_atacado numeric(12,2),
+  custo_medio numeric(12,2),
+  txt_memoria_pc_os_esp text,
+  txt_subtipo_produto text,
   memoria_pc text,
   subtipo text,
   tipo_produto_os text,
-
-  -- flags
   servico_avaria boolean not null default false,
-  remover boolean not null default false,
-
-  -- textos denormalizados (para manter compat, idealmente usar JOIN)
-  txt_especificacoes text,
-  txt_memoria text,
-  txt_subtipo_produto text,
-  txt_tipo_produto text,
-  txt_memoria_pc_os_esp text,
-  id_unico text,
-
+  estoque_acessorio numeric(12,2),
+  emp_saldo_fiscal numeric(12,2),
+  cor_ref text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -789,58 +746,54 @@ create index idx_produtos_nome on produtos(empresa_id, nome);
 
 -- ============================================================================
 -- 27. CLIENTES
+-- Colunas na ordem DB016_CLI_CLIENTE (1-43) para migracao 1:1
 -- ============================================================================
 create table clientes (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
+  end_cep text,
   nome text,
-  cpf_cnpj text,
-  cpf_cnpj_normalizado text,
   email text,
-  telefone text,
-  ddi integer,
-  instagram text,
-
-  -- dados pessoais
-  data_nascimento date,
-  mes_aniversario integer check (mes_aniversario between 1 and 12),
-  dia_aniversario integer check (dia_aniversario between 1 and 31),
-  genero text,
-  genero_txt text,
-  tipo_cliente text,
-  info_adicional text,
-  como_conheceu text,
-  outra_forma text,
-
-  -- endereco
+  data_criacao text,
   end_rua text,
-  end_complemento text,
-  end_numero text,
+  cpf_cnpj text,
+  teste123 numeric(12,2),
+  end_uf text,
+  qtd_caracteres integer,
+  telefone text,
+  como_conheceu text,
+  instagram text,
+  outra_forma text,
+  total_os integer not null default 0,
+  ativo boolean not null default true,
   end_bairro text,
   end_cidade text,
-  end_cep text,
-  end_uf text,
-
-  -- flags
+  end_numero text,
+  genero text,
+  tipo_cliente text,
   possui_emp boolean not null default false,
-  emp_ativos text,
-
-  -- estatisticas (desnormalizadas - atualizadas por triggers/app)
-  total_atendimentos integer not null default 0,
-  ultimo_ate_data timestamptz,
-  total_os integer not null default 0,
+  ddi integer,
+  mes_aniversario integer check (mes_aniversario is null or (mes_aniversario between 1 and 12)),
+  genero_txt text,
+  data_nascimento date,
+  dia_aniversario integer check (dia_aniversario is null or (dia_aniversario between 1 and 31)),
+  data_correta date,
   ultima_os_data timestamptz,
-  qtd_caracteres integer,
-
-  -- credito
-  credito_vendas numeric(12,2) not null default 0,
-  carteira_usuario_ref text,
-
   id_unico text,
-
+  total_atendimentos integer not null default 0,
+  empresa_id bigint not null references empresas(id),
+  info_adicional text,
+  end_complemento text,
+  ultimo_ate_data timestamptz,
+  carteira_usuario_ref text,
+  credito_vendas numeric(12,2) not null default 0,
+  cpf_cnpj_normalizado text,
+  vinculados_ref text,
+  emp_ativos text,
+  etiquetas_ref text,
+  atendimentos_vinculados_ref text,
+  credito_saidas_ref text,
+  credito_entradas_ref text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -939,111 +892,101 @@ create index idx_avarias_assoc_produto on avarias_associadas(produto_id);
 
 -- ============================================================================
 -- 31. TRANSACOES: ATENDIMENTOS (tabela principal de vendas)
+-- Colunas na ordem DB029_LAN_ATENDIMENTO (1-87) para migracao 1:1
 -- ============================================================================
 create table atendimentos (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  -- identificacao
-  cod_atendimento text,
-  id_unico text,
-  slug text,
-
-  -- status
-  concretizado boolean not null default false,
-  cancelado boolean not null default false,
-  devolvido boolean not null default false,
-  status text check (status in ('aberto','concretizado','cancelado','devolvido')),
-  lanca_ativo boolean not null default true,
-  lanca_estoque boolean not null default true,
-
-  -- participantes
-  atendente_ref text,
-  vendedor_ref text,
-  criado_por text,
-  cliente_id bigint references clientes(id),
+  status text check (status is null or status in ('aberto','concretizado','cancelado','devolvido')),
   cli_cpf text,
+  criado_por text,
+  tipo_fiscal text,
+  uuid_fiscal text,
+  valor_frete numeric(12,2),
   cli_nome text,
-  cli_informacoes text,
-  cli_intencao text,
-
-  -- datas
-  data_venda timestamptz,
-  data_cancelamento timestamptz,
-  cancelado_por text,
-  motivo_cancelamento text,
-
-  -- valores
-  total_custo_vb numeric(12,2),
+  concretizado boolean not null default false,
+  chave text,
+  como_conheceu text,
+  estilo_saida text,
   total_bruto numeric(12,2),
+  vendedor_ref text,
+  data_venda timestamptz,
+  atendente_ref text,
+  url_xml text,
+  end_cep text,
+  obs_na_nota text,
+  cod_atendimento text,
+  pagto_pix numeric(12,2),
   total_taxas numeric(12,2),
-  total_custo_vb_taxas numeric(12,2),
+  link_doc_assinado text,
+  end_ibge text,
+  obs_interno text,
+  menu_entrada_info text,
   total_liquido numeric(12,2),
   lucro_bruto numeric(12,2),
-  lucro_operacional numeric(12,2),
-  valor_frete numeric(12,2),
-
-  -- custos por tipo
-  bri_custo_total numeric(12,2),
-  tro_custo_total numeric(12,2),
-  ven_custo_total numeric(12,2),
-
-  -- pagamento resumo
-  pagto_cartao numeric(12,2),
-  pagto_desc_total numeric(12,2),
-  pagto_dinheiro numeric(12,2),
-  pagto_pix numeric(12,2),
-  pagto_ted numeric(12,2),
-  desconto_adicional numeric(12,2),
-  desconto_produto numeric(12,2),
-
-  -- fiscal
-  doc_fiscal text,
-  tipo_fiscal text,
-  nf_cod_ent text,
-  nf_cod_sai text,
-
-  -- documento / assinatura
-  doc_file_url text,
-  ass_caminho_url text,
-  ass_assinado boolean not null default false,
-  link_doc_assinado text,
-  enviou_doc boolean not null default false,
-  doc_criado boolean not null default false,
-  folder_struct text,
-
-  -- danfe
-  chave text,
-  url_danfe_full text,
-  url_danfe_simples text,
-  url_xml text,
-  uuid_fiscal text,
-
-  -- endereco
+  tipo_venda text,
+  enviou_doc timestamptz,
   cidade_txt text,
   estado_txt text,
   end_bairro text,
-  end_cep text,
   end_cidade text,
-  end_endereco text,
-  end_estado text,
-  end_ibge text,
   end_numero text,
-
-  -- referencias
-  ate_referencia text,
-  possui_anexo boolean not null default false,
-  altera_taxa_autorizado boolean not null default false,
-  tipo_venda text,
-  estilo_saida text,
-  menu_entrada_info text,
-  son text,
+  pagto_ted numeric(12,2),
+  total_custo_vb numeric(12,2),
+  ass_caminho_url text,
+  devolvido boolean not null default false,
+  lanca_ativo boolean not null default true,
+  estados_txt text,
+  doc_file_url text,
+  end_endereco text,
+  intencao_txt text,
+  id_unico text,
+  folder_struct text,
+  cancelado_por text,
+  doc_fiscal boolean not null default false,
   tipo_interacao text,
-  cod_garantia_ref text,
+  bri_custo_total numeric(12,2),
+  tro_custo_total numeric(12,2),
+  ven_custo_total numeric(12,2),
+  empresa_id bigint not null references empresas(id),
+  pagto_cartao numeric(12,2),
+  url_danfe_full text,
+  nf_cod_interno text,
+  ass_assinado boolean not null default false,
+  possui_anexo boolean not null default false,
+  pagto_desc_total numeric(12,2),
+  pagto_dinheiro numeric(12,2),
   cod_garantia_txt text,
+  desconto_adicional numeric(12,2),
+  cli_intencao text,
+  total_custo_vb_taxas numeric(12,2),
+  url_danfe_simples text,
+  data_cancelamento timestamptz,
+  desconto_produto numeric(12,2),
+  lucro_operacional numeric(12,2),
+  motivo_cancelamento text,
+  altera_taxa_autorizado text,
+  son text,
   desc_acres_aprovado_por text,
-
+  cap_custos_ref text,
+  doc_criado_ref text,
+  nf_cod_sai text,
+  end_estado text,
+  cliente_id bigint references clientes(id),
+  lanca_estoque_ref text,
+  cod_garantia_ref text,
+  nf_cod_ent text,
+  ate_referencia text,
+  tro_produtos_ref text,
+  car_pagamento_ref text,
+  ven_produtos_ref text,
+  fiscal_pagamento_ref text,
+  bri_produtos_ref text,
+  cap_car_pagamento_ref text,
+  termos_selecionados_ref text,
+  slug text,
+  cancelado boolean not null default false,
+  lanca_estoque boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -1205,50 +1148,45 @@ create index idx_pv_atualizacoes_prevenda on pre_venda_atualizacoes(pre_venda_id
 
 -- ============================================================================
 -- 36. TRANSACOES: COMPRAS
+-- Colunas na ordem DB017_COM_COMPRA (1-33) para migracao 1:1
 -- ============================================================================
 create table compras (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  ativo boolean not null default true,
-  concretizada boolean not null default false,
-  cod_nota text,
-  cpf_cnpj text,
-  fornecedor_id bigint references fornecedores(id),
-  fornecedor_ref text,
   origem text,
-
-  -- pagamento
-  caixa text,
-  forma text,
-  forma_pagto_txt text,
+  cpf_cnpj text,
+  ativo boolean not null default true,
+  cod_nota text,
+  total_produtos numeric(12,2),
   data_compra timestamptz,
   data_pagto timestamptz,
+  id_chave text,
+  menu_entrada_info text,
   pagto_frete numeric(12,2),
+  pagto_quitado text,
+  total_bruto numeric(12,2),
+  cancelada_por text,
+  concretizada boolean not null default false,
   pagto_imposto numeric(12,2),
-  pagto_outras numeric(12,2),
+  id_unico text,
+  doc_fiscal boolean not null default false,
   pagto_desconto numeric(12,2),
   pagto_ocorrencia text,
-  pagto_quitado boolean not null default false,
-  pagto_recorrencia integer,
-  qtd_parcelas integer,
-  total_bruto numeric(12,2),
-  total_produtos numeric(12,2),
-  valor_por_parcela numeric(12,2),
-
-  -- cancelamento
-  cancelada_por text,
+  empresa_id bigint not null references empresas(id),
+  pagto_outras numeric(12,2),
   data_cancelamento timestamptz,
+  qtd_parcelas integer,
+  forma_pagto_txt text,
+  pagto_recorrencia integer,
   motivo_cancelamento text,
-
-  -- fiscal
-  doc_fiscal boolean not null default false,
-  id_chave text,
+  caixa text,
+  valor_por_parcela numeric(12,2),
+  fornecedor_id bigint references fornecedores(id),
   nf_cod_ent text,
-  menu_entrada_info text,
-  id_unico text,
-
+  cap_car_ref text,
+  forma text,
+  produtos_comprados_ref text,
+  fornecedor_ref text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -1810,82 +1748,71 @@ create index idx_ncm_cest_ncm on ncm_cest(ncm) where ncm is not null;
 
 -- ============================================================================
 -- 51. FISCAL: NOTAS FISCAIS
+-- Colunas na ordem DB056_LAN_NF (1-60) para migracao 1:1
 -- ============================================================================
 create table notas_fiscais (
   id bigint generated always as identity primary key,
   bubble_unique_id text unique,
-  empresa_id bigint not null references empresas(id),
-
-  -- identificacao
-  ativo boolean not null default true,
-  nf_cod text,
-  subtipo_fiscal text,
-  tipo_fiscal text check (tipo_fiscal in ('nfe','nfce','nfse','entrada','saida')),
-  status_nf text,
-  devolvido boolean not null default false,
-
-  -- referencias
-  ate_cod text,
-  com_cod text,
-  data_info timestamptz,
-  entrada_por text,
-  atendente_ref text,
-  vendedor_ref text,
-  emissor text,
-
-  -- cliente
-  cli_nome text,
-  cli_cpf_cnpj text,
   cli_ie text,
-  tipo_pessoa text,
-
-  -- endereco cliente
-  cli_end_rua text,
-  cli_end_num text,
-  cli_end_bairro text,
-  cli_end_cep text,
-  cli_end_cidade_os text,
-  cli_end_cidade_txt text,
-  cli_end_estado_os text, -- Ex: Salvar como "AC" (igual o Display do OS)
-  cli_end_estado_txt text,
-  cli_end_ibge text,
-
-  -- valores pagamento (saida)
-  nf_sai_boleto numeric(12,2),
-  nf_sai_cartao numeric(12,2),
-  nf_sai_desconto numeric(12,2),
-  nf_sai_dinheiro numeric(12,2),
-  nf_sai_frete numeric(12,2),
-  nf_sai_pix numeric(12,2),
-  nf_sai_ted numeric(12,2),
-  nf_sai_troca numeric(12,2),
-  total_entrada numeric(12,2),
-  total_saida numeric(12,2),
-
-  -- observacoes
-  obs_externa text,
-  obs_interna text,
-
-  -- SEFAZ / emissao
-  chave text,
-  danfe_url text,
-  danfe_simples_url text,
-  xml_url text,
-  uuid_fiscal text,
-  xml_subido boolean not null default false,
-  id_chave text,
-  referencia text,
-  serie text,
-  sequencia text,
   modelo text,
+  cli_cpf_cnpj text,
+  wbm_xml text,
+  serie numeric(12,2),
   qr_link text,
-  retorno_lote text,
-  retorno_nfse text,
+  ativo boolean not null default true,
+  cli_nome text,
+  uuid_fiscal text,
+  vendedor_ref text,
+  id_chave text,
   link_xml text,
   menu_entrada_info text,
+  data_info timestamptz,
+  chave text,
+  danfe_url text,
+  atendente_ref text,
+  status_nf text,
+  nf_sai_pix numeric(12,2),
+  nf_sai_ted numeric(12,2),
+  devolvido boolean not null default false,
+  cli_end_bairro text,
+  xml_subido text,
+  nf_cod text,
+  tipo_fiscal text check (tipo_fiscal is null or tipo_fiscal in ('nfe','nfce','nfse','entrada','saida')),
+  entrada_por text,
+  cli_end_cep text,
+  cli_end_num text,
+  obs_externa text,
+  obs_interna text,
+  sequencia numeric(12,2),
   estados_txt text,
+  nf_sai_frete numeric(12,2),
+  nf_sai_troca numeric(12,2),
+  cli_end_rua text,
   id_unico text,
-
+  nf_sai_boleto numeric(12,2),
+  nf_sai_cartao numeric(12,2),
+  total_saida numeric(12,2),
+  subtipo_fiscal text,
+  cli_end_cidade_txt text,
+  cli_end_estado_txt text,
+  nf_sai_desconto numeric(12,2),
+  nf_sai_dinheiro numeric(12,2),
+  total_entrada numeric(12,2),
+  danfe_simples_url text,
+  cli_end_ibge text,
+  empresa_id bigint not null references empresas(id),
+  com_cod text,
+  ate_cod text,
+  referencia text,
+  tipo_pessoa text,
+  cli_end_estado_os text,
+  emissor text,
+  cli_end_cidade_os text,
+  produtos_ref text,
+  retorno_nfse text,
+  servicos_ref text,
+  retorno_lote text,
+  pagamento_cap_ref text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by text
@@ -3446,25 +3373,115 @@ create index idx_tev_transferencia on transferencia_empresa_view(transferencia_i
 create index idx_tev_empresa on transferencia_empresa_view(empresa_id);
 
 -- ============================================================================
--- J06. ATENDIMENTO <-> PRODUTO (venda, troca, brinde)
--- Substitui: DB029."069_VEN_PRODUTOS", "066_TRO_PRODUTOS", "037_BRI_PRODUTOS"
+-- LANCAMENTO ESTOQUE (DB031_LAN_ESTOQUE)
+-- 98 colunas: id + bubble_unique_id + 96 campos na mesma ordem da DB031
+-- para migracao 1:1 dos dados do Bubble.
 -- ============================================================================
-create table atendimento_produto (
+create table lancamento_estoque (
   id bigint generated always as identity primary key,
-  atendimento_id bigint not null references atendimentos(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  tipo text not null check (tipo in ('venda','troca','brinde')),
-  quantidade integer not null default 1,
-  preco numeric(12,2),
-  custo numeric(12,2),
-  desconto numeric(12,2),
-  created_at timestamptz not null default now(),
-  created_by text
+  bubble_unique_id text unique,
+  status text,
+  cod_os text,
+  est_sku text,
+  ate_cod text,
+  est_imei text,
+  est_nome text,
+  vendedor_id bigint references usuarios(id),
+  atendente_id bigint references usuarios(id),
+  data_movimentacao date,
+  est_origem text,
+  nome_cliente text,
+  cancelado boolean default false,
+  est_qtd numeric(12,2),
+  est_num_serie text,
+  txt_memoria text,
+  informacao_temp boolean default true,
+  nf_cor text,
+  nf_ncm text,
+  est_bateria numeric(12,2),
+  est_cor_id bigint references cores(id),
+  seq_xml text,
+  nf_cest text,
+  bri_desconto numeric(12,2),
+  est_cod_interno text,
+  est_custo_proposta_atualizado numeric(12,2),
+  com_cod text,
+  nf_categ text,
+  menu_entrada_info text,
+  transferencia boolean default false,
+  cod_interno_loja text,
+  com_custo_total numeric(12,2),
+  est_preco_venda numeric(12,2),
+  est_reservado_por_id bigint references usuarios(id),
+  est_venda_total numeric(12,2),
+  est_marca_id bigint references marcas(id),
+  est_qtd_negativa numeric(12,2),
+  percentual numeric(12,2),
+  garantia_flag boolean,
+  nf_subcateg text,
+  est_cod_lancamento text,
+  est_desconto_total_dado numeric(12,2),
+  est_grupo_id bigint references grupos(id),
+  est_nome_prod_concat text,
+  est_tipo_lancamento text,
+  txt_estoques text,
+  est_acrescimo_dado numeric(12,2),
+  est_entrada_ativa boolean default false,
+  est_identificado boolean,
+  fotos_produto text[],
+  intencao text,
+  id_unico text,
+  ent_fiscal boolean default false,
+  empresa_id bigint references empresas(id),
+  est_categoria_id bigint references categorias(id),
+  est_lucro_unitario numeric(12,2),
+  sai_fiscal boolean default false,
+  est_estoque text,
+  est_memoria text,
+  assis_cliente boolean,
+  info_inutilizacao text,
+  nf_id_prod_unif text,
+  nf_custo_unit numeric(12,2),
+  cod_os_tarefa_id bigint references assistencia_ordens_servico(id),
+  est_nome_origem_cli_outro text,
+  proporcao_desc_extra numeric(12,2),
+  produto_id bigint references produtos(id),
+  txt_tipo_produto text,
+  nf_prod_custo_total numeric(12,2),
+  est_avarias_ids jsonb,
+  est_avarias_desconto_total numeric(12,2),
+  est_custo_proposta_inicial numeric(12,2),
+  est_estoque_lo_id bigint references locais_estoque(id),
+  origem_transferencia text,
+  checklist_realizado boolean default false,
+  lest_observacoes_adicionais text,
+  est_desconto_no_produto numeric(12,2),
+  desc_acres_aprovado_por_id bigint references usuarios(id),
+  checklist_aprovado text[],
+  nf_cod_id bigint references notas_fiscais(id),
+  checklist_nao_aprovado text[],
+  com_cod_lancamento_id bigint references compras(id),
+  est_especificacao text,
+  est_tipo_de_produto_os text,
+  ate_cod_lancamento_id bigint references atendimentos(id),
+  origem_cliente_id bigint references clientes(id),
+  est_avarias_nome_ids jsonb,
+  nome_origem_fornecedor_id bigint references fornecedores(id),
+  xml_id_unico text,
+  emp_cod_lanca_id bigint references emprestimos(id),
+  regra_fiscal_id bigint references parametros_imposto(id),
+  nf_emissor_id bigint references info_fiscal(id),
+  transferencia_id bigint references transferencias(id),
+  info_fiscal_estoque_id bigint,
+  estoque_referenciado_id bigint references lancamento_estoque(id),
+  checklist_id bigint references checklist_avaliacao(id),
+  xml_id text
 );
 
-create index idx_ap_atendimento on atendimento_produto(atendimento_id);
-create index idx_ap_produto on atendimento_produto(produto_id);
-create index idx_ap_tipo on atendimento_produto(atendimento_id, tipo);
+create index idx_le_bubble_unique_id on lancamento_estoque(bubble_unique_id);
+create index idx_le_empresa on lancamento_estoque(empresa_id);
+create index idx_le_produto on lancamento_estoque(produto_id);
+create index idx_le_data_movimentacao on lancamento_estoque(data_movimentacao);
 
 -- ============================================================================
 -- J07. ATENDIMENTO <-> FINANCEIRO (CAP/CAR)
@@ -3526,25 +3543,6 @@ create table atendimento_fiscal_pagamento (
 create index idx_afp_atendimento on atendimento_fiscal_pagamento(atendimento_id);
 
 -- ============================================================================
--- J11. PRE-VENDA <-> PRODUTO
--- Substitui: DB038 colunas 014-019 (6 colunas de listas de produtos)
--- ============================================================================
-create table pre_venda_produto (
-  id bigint generated always as identity primary key,
-  pre_venda_id bigint not null references pre_vendas(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  tipo text not null check (tipo in ('venda','troca','brinde')),
-  is_snapshot boolean not null default false,
-  quantidade integer not null default 1,
-  preco numeric(12,2),
-  created_at timestamptz not null default now(),
-  created_by text
-);
-
-create index idx_pvp_prevenda on pre_venda_produto(pre_venda_id);
-create index idx_pvp_produto on pre_venda_produto(produto_id);
-
--- ============================================================================
 -- J12. PRE-VENDA <-> PAGAMENTO (CAP/CAR)
 -- Substitui: DB038."024_Pagamentos realizados"
 -- ============================================================================
@@ -3560,23 +3558,6 @@ create index idx_pvpag_prevenda on pre_venda_pagamento(pre_venda_id);
 create index idx_pvpag_capcar on pre_venda_pagamento(cap_car_id);
 
 -- ============================================================================
--- J13. COMPRA <-> PRODUTO
--- Substitui: DB017."013_ProdutosComprados"
--- ============================================================================
-create table compra_produto (
-  id bigint generated always as identity primary key,
-  compra_id bigint not null references compras(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  quantidade integer not null default 1,
-  custo numeric(12,2),
-  created_at timestamptz not null default now(),
-  created_by text
-);
-
-create index idx_cp_compra on compra_produto(compra_id);
-create index idx_cp_produto on compra_produto(produto_id);
-
--- ============================================================================
 -- J14. COMPRA <-> FINANCEIRO (CAP/CAR)
 -- Substitui: DB017."029_CAP-CAR"
 -- ============================================================================
@@ -3590,23 +3571,6 @@ create table compra_financeiro (
 
 create index idx_cf_compra on compra_financeiro(compra_id);
 create index idx_cf_capcar on compra_financeiro(cap_car_id);
-
--- ============================================================================
--- J15. NOTA FISCAL <-> PRODUTO
--- Substitui: DB056."030_PRODUTOS"
--- ============================================================================
-create table nf_produto (
-  id bigint generated always as identity primary key,
-  nf_id bigint not null references notas_fiscais(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  quantidade integer not null default 1,
-  valor numeric(12,2),
-  created_at timestamptz not null default now(),
-  created_by text
-);
-
-create index idx_nfp_nf on nf_produto(nf_id);
-create index idx_nfp_produto on nf_produto(produto_id);
 
 -- ============================================================================
 -- J16. NOTA FISCAL <-> SERVICO
@@ -3640,38 +3604,6 @@ create index idx_nfpag_nf on nf_pagamento(nf_id);
 create index idx_nfpag_capcar on nf_pagamento(cap_car_id);
 
 -- ============================================================================
--- J18. EMPRESTIMO <-> PRODUTO
--- Substitui: DB023."014_EMP_Produtos"
--- ============================================================================
-create table emprestimo_produto (
-  id bigint generated always as identity primary key,
-  emprestimo_id bigint not null references emprestimos(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  quantidade integer not null default 1,
-  created_at timestamptz not null default now(),
-  created_by text
-);
-
-create index idx_ep_emprestimo on emprestimo_produto(emprestimo_id);
-create index idx_ep_produto on emprestimo_produto(produto_id);
-
--- ============================================================================
--- J19. HISTORICO CAIXA <-> PRODUTO (por tipo transacao)
--- Substitui: DB025."005-007_PRODUTOS_Compras/Trocas/Vendas"
--- ============================================================================
-create table historico_caixa_produto (
-  id bigint generated always as identity primary key,
-  historico_id bigint not null references historico_caixa(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  tipo_transacao text not null check (tipo_transacao in ('compra','troca','venda')),
-  created_at timestamptz not null default now(),
-  created_by text
-);
-
-create index idx_hcp_historico on historico_caixa_produto(historico_id);
-create index idx_hcp_produto on historico_caixa_produto(produto_id);
-
--- ============================================================================
 -- J20. PRODUTO <-> PRODUTO ASSOCIADO (auto-referencia)
 -- Substitui: DB062."027_CODIGO-ASSOCIADO"
 -- ============================================================================
@@ -3687,22 +3619,6 @@ create index idx_pa_produto on produto_associado(produto_id);
 create index idx_pa_associado on produto_associado(produto_associado_id);
 
 -- ============================================================================
--- J21. ATENDIMENTO INICIANTE <-> PRODUTO
--- Substitui: DB033."008_ATE_TRO_Produtos", "009_ATE_VEN_Produtos"
--- ============================================================================
-create table iniciante_ate_produto (
-  id bigint generated always as identity primary key,
-  iniciante_ate_id bigint not null references atendimentos_iniciante(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  tipo text not null check (tipo in ('venda','troca')),
-  created_at timestamptz not null default now(),
-  created_by text
-);
-
-create index idx_iap_iniciante on iniciante_ate_produto(iniciante_ate_id);
-create index idx_iap_produto on iniciante_ate_produto(produto_id);
-
--- ============================================================================
 -- J22. ATENDIMENTO INICIANTE <-> PAGAMENTO
 -- Substitui: DB033."007_ATE_Pagamento"
 -- ============================================================================
@@ -3715,25 +3631,6 @@ create table iniciante_ate_pagamento (
 );
 
 create index idx_iapag_iniciante on iniciante_ate_pagamento(iniciante_ate_id);
-
--- ============================================================================
--- J23. GARANTIA <-> PRODUTO (problema, original, vendido)
--- Substitui: DB032 colunas 019-038 (listas de produtos com custos/precos)
--- ============================================================================
-create table garantia_produto (
-  id bigint generated always as identity primary key,
-  garantia_id bigint not null references garantias(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  tipo text not null check (tipo in ('problema','problema_original','vendido')),
-  custo numeric(12,2),
-  custo_inicial numeric(12,2),
-  preco numeric(12,2),
-  created_at timestamptz not null default now(),
-  created_by text
-);
-
-create index idx_gp_garantia on garantia_produto(garantia_id);
-create index idx_gp_produto on garantia_produto(produto_id);
 
 -- ============================================================================
 -- J24. GARANTIA <-> AVARIA
@@ -3766,24 +3663,6 @@ create table os_checklist (
 
 create index idx_osc_os on os_checklist(os_id);
 create index idx_osc_item on os_checklist(checklist_item_id);
-
--- ============================================================================
--- J26. OS <-> PECAS UTILIZADAS (produtos internos/externos)
--- Substitui: DB082 "[99] - Pecas_CI/SI_Utilizadas", "Lista_Pecas" (4+ colunas)
--- ============================================================================
-create table os_peca (
-  id bigint generated always as identity primary key,
-  os_id bigint not null references assistencia_ordens_servico(id) on delete cascade,
-  produto_id bigint not null references produtos(id),
-  origem text not null check (origem in ('interna','externa')),
-  custo numeric(12,2),
-  quantidade integer not null default 1,
-  created_at timestamptz not null default now(),
-  created_by text
-);
-
-create index idx_osp_os on os_peca(os_id);
-create index idx_osp_produto on os_peca(produto_id);
 
 -- ============================================================================
 -- J27. OS <-> SERVICOS
@@ -4144,27 +4023,19 @@ comment on table usuario_dispositivo is '[JUNCTION J02] usuario <-> dispositivo 
 comment on table usuario_instancia is '[JUNCTION J03] usuario <-> instancia WhatsApp (CRM). Define acesso por canal. Substitui: User."09 - instancias", DB087."10 - usuariosComAcesso".';
 comment on table usuario_fila is '[JUNCTION J04] usuario <-> fila de atendimento CRM. Distribuicao de leads. Substitui: User."06 - filasUsuario".';
 comment on table transferencia_empresa_view is '[JUNCTION J05] empresas com visibilidade sobre uma transferencia entre lojas. Substitui: DB042."003_EmpresasView".';
-comment on table atendimento_produto is '[JUNCTION J06] produtos de um atendimento por tipo (venda, troca, brinde) com quantidade, preco, custo e desconto. Substitui: DB029."069_VEN_PRODUTOS", "066_TRO_PRODUTOS", "037_BRI_PRODUTOS".';
+comment on table lancamento_estoque is 'Tabela 1:1 com DB031_LAN_ESTOQUE (98 colunas: id + bubble_unique_id + 96 campos na mesma ordem). Para migracao correta dos dados do Bubble.';
 comment on table atendimento_financeiro is '[JUNCTION J07] lancamentos CAP/CAR vinculados a um atendimento por tipo (pagamento, custo, recebimento). Substitui: DB029."079_z_CAP_CAR_Pagamento", "080_z_CAP_Custos", "081_z_CAR_Pagamento".';
 comment on table atendimento_termo is '[JUNCTION J08] termos de garantia selecionados para um atendimento. Substitui: DB029."032_Termos-selecionados".';
 comment on table atendimento_garantia is '[JUNCTION J09] registros de garantia vinculados a um atendimento. Substitui: DB029."084_COD_GARANTIA".';
 comment on table atendimento_fiscal_pagamento is '[JUNCTION J10] pagamentos fiscais (CAP/CAR) vinculados a atendimento para emissao de NF. Substitui: DB029."049_FISCAL_PAGAMENTO".';
-comment on table pre_venda_produto is '[JUNCTION J11] produtos de pre-venda por tipo (venda, troca, brinde). Flag is_snapshot indica copia congelada. Substitui: DB038."014-019_Lista Produtos Troca/Venda/Brinde" (6 colunas).';
 comment on table pre_venda_pagamento is '[JUNCTION J12] pagamentos (CAP/CAR) realizados em uma pre-venda. Substitui: DB038."024_Pagamentos realizados".';
-comment on table compra_produto is '[JUNCTION J13] produtos adquiridos em uma compra com quantidade e custo unitario. Substitui: DB017."013_ProdutosComprados".';
 comment on table compra_financeiro is '[JUNCTION J14] lancamentos financeiros (CAP/CAR) de uma compra. Substitui: DB017."029_CAP-CAR".';
-comment on table nf_produto is '[JUNCTION J15] produtos incluidos em uma nota fiscal com quantidade e valor. Substitui: DB056."030_PRODUTOS".';
 comment on table nf_servico is '[JUNCTION J16] servicos incluidos em uma NFS-e com valor. Substitui: DB056."031_Servicos".';
 comment on table nf_pagamento is '[JUNCTION J17] lancamentos financeiros (CAP/CAR) de uma nota fiscal. Substitui: DB056."040_PAGAMENTO-CAP".';
-comment on table emprestimo_produto is '[JUNCTION J18] produtos emprestados (comodato) com quantidade. Substitui: DB023."014_EMP_Produtos".';
-comment on table historico_caixa_produto is '[JUNCTION J19] produtos transacionados em um periodo de caixa por tipo (compra, troca, venda). Substitui: DB025."005-007_PRODUTOS_Compras/Trocas/Vendas".';
 comment on table produto_associado is '[JUNCTION J20] auto-referencia produto <-> produto (acessorios, kits). Check impede auto-associacao. Substitui: DB062."027_CODIGO-ASSOCIADO".';
-comment on table iniciante_ate_produto is '[JUNCTION J21] produtos de atendimento iniciante por tipo (venda, troca). Substitui: DB033."008_ATE_TRO_Produtos", "009_ATE_VEN_Produtos".';
 comment on table iniciante_ate_pagamento is '[JUNCTION J22] pagamentos (CAP/CAR) de um atendimento iniciante. Substitui: DB033."007_ATE_Pagamento".';
-comment on table garantia_produto is '[JUNCTION J23] produtos de garantia por tipo (problema, problema_original, vendido) com custo e preco. Substitui: DB032 colunas 019-038 (6 colunas de listas de produtos).';
 comment on table garantia_avaria is '[JUNCTION J24] avarias/defeitos registrados em uma garantia. Substitui: DB032."017_Avarias".';
 comment on table os_checklist is '[JUNCTION J25] itens de checklist de uma OS por tipo (principal, origem, problema, posterior etc). Flag is_snapshot indica copia congelada. Substitui: DB082."[01]-CHECKLIST", "[66]-CHECKLIST_ORIGEM", "[67]-CHECK_PROBLEMAS", "[99]-CHECKLIST POSTERIOR" (6+ colunas).';
-comment on table os_peca is '[JUNCTION J26] pecas utilizadas em uma OS com origem (interna/externa), custo e quantidade. Substitui: DB082."[99]-Pecas_CI/SI_Utilizadas", "Lista_Pecas" (4+ colunas).';
 comment on table os_servico is '[JUNCTION J27] servicos executados em uma OS com descricao e preco. Substitui: DB082."[71]-LISTA_SERVICO", "SERVICOS", "LISTA_PRECOS_SERVICOS".';
 comment on table os_financeiro is '[JUNCTION J28] lancamentos financeiros (CAP/CAR) de uma ordem de servico. Substitui: DB082."Z - Lista_CAP-CAR".';
 comment on table projeto_membro is '[JUNCTION J29] membros (usuarios) de um projeto. Unique constraint impede duplicatas. Substitui: DB079."[02] - MEMBROS".';
@@ -4332,27 +4203,19 @@ alter table usuario_dispositivo enable row level security;
 alter table usuario_instancia enable row level security;
 alter table usuario_fila enable row level security;
 alter table transferencia_empresa_view enable row level security;
-alter table atendimento_produto enable row level security;
+alter table lancamento_estoque enable row level security;
 alter table atendimento_financeiro enable row level security;
 alter table atendimento_termo enable row level security;
 alter table atendimento_garantia enable row level security;
 alter table atendimento_fiscal_pagamento enable row level security;
-alter table pre_venda_produto enable row level security;
 alter table pre_venda_pagamento enable row level security;
-alter table compra_produto enable row level security;
 alter table compra_financeiro enable row level security;
-alter table nf_produto enable row level security;
 alter table nf_servico enable row level security;
 alter table nf_pagamento enable row level security;
-alter table emprestimo_produto enable row level security;
-alter table historico_caixa_produto enable row level security;
 alter table produto_associado enable row level security;
-alter table iniciante_ate_produto enable row level security;
 alter table iniciante_ate_pagamento enable row level security;
-alter table garantia_produto enable row level security;
 alter table garantia_avaria enable row level security;
 alter table os_checklist enable row level security;
-alter table os_peca enable row level security;
 alter table os_servico enable row level security;
 alter table os_financeiro enable row level security;
 alter table projeto_membro enable row level security;
@@ -4424,6 +4287,7 @@ begin
       'conf_modelos_etiqueta','categorias','cores','grupos',
       'locais_estoque','marcas','produtos','clientes','fornecedores',
       'avarias','avarias_associadas','atendimentos','atendimentos_iniciante',
+      'lancamento_estoque',
       'pre_vendas','pre_venda_itens','pre_venda_atualizacoes','compras',
       'emprestimos','simulacoes','sim_pagamentos','sim_trocas','sim_vendas',
       'garantias','estoque_iniciante','cap_car','caixa_abertura_fechamento',
@@ -4496,6 +4360,7 @@ begin
       'categorias','cores','grupos','locais_estoque','marcas',
       'modelos_produto','produtos','clientes','fornecedores',
       'avarias','avarias_associadas','atendimentos','atendimentos_iniciante',
+      'lancamento_estoque',
       'pre_vendas','compras','emprestimos','transferencias','simulacoes',
       'garantias','estoque_iniciante','cap_car','caixa_abertura_fechamento',
       'historico_caixa','subcategorias_dre','precificador',
@@ -4543,22 +4408,23 @@ end $$;
 -- | "DB013_CONF_TAXAS"               | taxas_cartao              |                                |
 -- | "DB014_CONF_NEW_PERMISSAO"       | permissoes                | + funcao_permissao junction    |
 -- | "DB016_CLI_CLIENTE"              | clientes                  | + cliente_etiqueta, credito    |
--- | "DB017_COM_COMPRA"               | compras                   | + compra_produto, financeiro   |
+-- | "DB017_COM_COMPRA"               | compras                   | + lancamento_estoque (tipo_origem=compra), financeiro |
 -- | "DB018_CAD_AVARIA"               | avarias                   |                                |
 -- | "DB019_CAD_AVARIA_ASSOCIADA"     | avarias_associadas        |                                |
 -- | "DB020_CAD_FORNECEDOR"           | fornecedores              |                                |
 -- | "DB021_DOC_ASSIN"                | documentos_assinados      |                                |
--- | "DB023_EMP_EMPREST_UM"           | emprestimos               | + emprestimo_produto           |
+-- | "DB023_EMP_EMPREST_UM"           | emprestimos               | + lancamento_estoque (tipo_origem=emprestimo) |
 -- | "DB024_FIN_ABRE_FECHA"           | caixa_abertura_fechamento |                                |
--- | "DB025_FIN_HISTORICO_CAIXA"      | historico_caixa           | + historico_caixa_produto      |
+-- | "DB025_FIN_HISTORICO_CAIXA"      | historico_caixa           | + lancamento_estoque (tipo_origem=historico_caixa) |
 -- | "DB026_FIN_SUBCATEGORIA_DRE"     | subcategorias_dre         |                                |
 -- | "DB028_FIS_NCM_CEST"             | ncm_cest                  |                                |
--- | "DB029_LAN_ATENDIMENTO"          | atendimentos              | + 5 junction tables            |
+-- | "DB029_LAN_ATENDIMENTO"          | atendimentos              | + lancamento_estoque (tipo_origem=atendimento), 4 junctions |
 -- | "DB030_LAN_CAP-CAR"              | cap_car                   |                                |
--- | "DB032_LAN_GARANTIA"             | garantias                 | + garantia_produto, avaria     |
--- | "DB033_LAN_INICIANTE_ATE"        | atendimentos_iniciante    | + iniciante_ate_produto/pagto  |
+-- | "DB031_LAN_ESTOQUE"              | lancamento_estoque        | 98 colunas (id + bubble_unique_id + 96 campos 1:1) |
+-- | "DB032_LAN_GARANTIA"             | garantias                 | + lancamento_estoque (tipo_origem=garantia), avaria |
+-- | "DB033_LAN_INICIANTE_ATE"        | atendimentos_iniciante    | + lancamento_estoque (tipo_origem=iniciante_ate), pagto |
 -- | "DB034_LAN_INICIANTE_ESTOQ"      | estoque_iniciante         |                                |
--- | "DB038_LAN_PRE_VENDA"            | pre_vendas                | + pre_venda_produto/pagto      |
+-- | "DB038_LAN_PRE_VENDA"            | pre_vendas                | + lancamento_estoque (tipo_origem=pre_venda), pagto |
 -- | "DB039_LAN_PROD_PRE"             | pre_venda_itens           |                                |
 -- | "DB040_LAN_SIMULACOES"           | simulacoes                | FK em sim_pagamentos/trocas    |
 -- | "DB041_LAN_SUPORTE"              | tickets_suporte           | + ticket_comentario            |
@@ -4566,7 +4432,7 @@ end $$;
 -- | "DB044_MKT_CUPOM"                | cupons                    |                                |
 -- | "DB045_MKT_LISTA_VIP"            | lista_vip                 |                                |
 -- | "DB055_MOD_PRODUTO"              | modelos_produto           |                                |
--- | "DB056_LAN_NF"                   | notas_fiscais             | + nf_produto/servico/pagto     |
+-- | "DB056_LAN_NF"                   | notas_fiscais             | + lancamento_estoque (tipo_origem=nf), servico, pagto |
 -- | "DB057_PROD_CATEGORIA"           | categorias                |                                |
 -- | "DB058_PROD_COR"                 | cores                     |                                |
 -- | "DB059_PROD_GRUPO"               | grupos                    |                                |
@@ -4584,7 +4450,7 @@ end $$;
 -- | "DB079_TREL_PROJETO"             | assistencia_projetos      | + projeto_membro               |
 -- | "DB080_TREL_STATUS_TAREFA"       | assistencia_status_tarefa |                                |
 -- | "DB081_TREL_TAREFA_CRM"          | assistencia_tarefas_crm   | + tarefa_crm_comentario        |
--- | "DB082_TREL_TAREFA_MANUT"        | assistencia_ordens_servico| + os_checklist/peca/servico/fin|
+-- | "DB082_TREL_TAREFA_MANUT"        | assistencia_ordens_servico| + os_checklist, lancamento_estoque (tipo_origem=os_peca), servico, fin |
 -- | "DB086_UTIL_PRECIFICADOR"        | precificador              |                                |
 -- | "DB087_CRM_INSTANCIAS"           | crm_instancias            | + usuario_instancia            |
 -- | "DB088_CRM_ETAPAS"               | crm_etapas                |                                |
@@ -4620,6 +4486,6 @@ end $$;
 -- | "DB999_VERIF_TASK_CHECKLIST"     | checklist_items           |                                |
 -- | "SAT"                            | sat_atendimentos          |                                |
 --
--- Total: 100 tabelas principais + 41 junction tables = 141 tabelas
+-- Total: 101 tabelas principais + 32 junction tables = 133 tabelas (DB031 unificada em lancamento_estoque)
 -- Tabela eliminada: DB002_ACESSO (dados absorvidos por usuario_empresa)
 -- ============================================================================
