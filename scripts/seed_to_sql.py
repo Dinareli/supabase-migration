@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Gera SQL de seed a partir dos CSV em supabase/seed-data/.
-Compatível com supabase/migrations/ (00002 empresas, 00016 assinaturas).
-Ordem: INSERT empresas, depois INSERT assinaturas (empresa_id via subquery em nome).
+Compatível com supabase/migrations/ (00002 empresas, 00016 usuarios, assinaturas).
+Ordem: INSERT empresas, depois INSERT usuarios (empresa_web_id/empresa_app_id por subquery), depois assinaturas.
 """
 import csv
 from pathlib import Path
@@ -24,6 +24,16 @@ EMPRESAS_COLS = [
     "carteira_ref", "engajamento_ref", "fatura_url", "configuracoes_gerais",
     "crm_acesso_ate", "termos", "termo_empresa", "id_visual",
     "created_at", "updated_at", "created_by",
+]
+
+# Colunas usuarios = 00016 schema (empresa_web_id e empresa_app_id por subquery em nome)
+USUARIOS_COLS = [
+    "bubble_unique_id", "nome", "sobrenome", "email", "cpf", "telefone", "telefone_mascarado",
+    "telefone_whatsapp", "data_nascimento", "foto_url", "funcao_logada_ref", "funcao_vinculada_ref",
+    "departamento", "perfil", "ativo", "basico_completo", "acesso_master", "logo_empresa_url",
+    "logo_empresa2_url", "crm_nome_chat", "crm_dados_user_ref", "whatsapp_instancia_ref",
+    "ultimo_changelog", "nps", "nps_geral_respondido", "como_conheceu", "token", "pesquisa_churn_ref",
+    "atualiza_pag", "permissao_inativo", "created_at", "updated_at", "created_by",
 ]
 
 # Colunas assinaturas = 00016 (empresa_id vem de subquery, não do CSV)
@@ -48,10 +58,13 @@ def sql_val(val: str, col: str) -> str:
     val = (val or "").strip()
     if val == "" or val.upper() == "NULL":
         return "NULL"
-    # boolean (empresas + assinaturas)
+    # boolean (empresas + usuarios + assinaturas)
     if col in ("ativo", "cancelado", "cadastro_completo", "primeiro_acesso", "aguardando_aprovacao",
                "beta", "super_beta", "novos_modelos", "novas_cores", "info_pagto_assinatura",
-               "assinatura_irregular", "primeiro_pagto", "adiciona_dias", "fiscal_ativo", "addon_assistencia"):
+               "assinatura_irregular", "primeiro_pagto", "adiciona_dias", "fiscal_ativo", "addon_assistencia",
+               "nps_geral_respondido", "acesso_master"):
+        return "true" if val.lower() == "true" else "false"
+    if col == "basico_completo":
         return "true" if val.lower() == "true" else "false"
     # integer
     if col in ("limite_usuarios", "qtd_vendedores", "usuario_adicional") and val != "":
@@ -74,8 +87,9 @@ def sql_val(val: str, col: str) -> str:
 
 
 def main():
+    n_usu = 0
     out = []
-    out.append("-- Seed: empresas + assinaturas (supabase/migrations 00002 + 00016)")
+    out.append("-- Seed: empresas + usuarios + assinaturas (supabase/migrations 00002, 00016)")
     out.append("-- Gerado por scripts/seed_to_sql.py")
     out.append("")
 
@@ -84,15 +98,48 @@ def main():
         raise SystemExit(f"Arquivo não encontrado: {empresas_csv}")
 
     with open(empresas_csv, newline="", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+        empresas_rows = list(csv.DictReader(f))
 
-    out.append(f"-- {len(rows)} empresas")
-    for row in rows:
+    out.append(f"-- {len(empresas_rows)} empresas")
+    for row in empresas_rows:
         vals = [sql_val(row.get(c, ""), c) for c in EMPRESAS_COLS]
         out.append("INSERT INTO empresas (" + ", ".join(EMPRESAS_COLS) + ")")
         out.append("VALUES (" + ", ".join(vals) + ");")
 
     out.append("")
+    # Usuarios (empresa_web_id e empresa_app_id por subquery em nome)
+    usuarios_csv = SEED_DIR / "usuarios.csv"
+    if usuarios_csv.exists():
+        out.append("-- Usuarios (empresa_web_id e empresa_app_id por subquery em nome)")
+        out.append("")
+        with open(usuarios_csv, newline="", encoding="utf-8") as f:
+            u_rows = list(csv.DictReader(f))
+        for row in u_rows:
+            empresa_web_nome = (row.get("empresa_web_nome") or "").strip().replace("'", "''")
+            empresa_app_nome = (row.get("empresa_app_nome") or "").strip().replace("'", "''")
+            empresa_web_id = "(SELECT id FROM empresas WHERE trim(nome) = trim(" + esc(empresa_web_nome) + ") LIMIT 1)" if empresa_web_nome else "NULL"
+            empresa_app_id = "(SELECT id FROM empresas WHERE trim(nome) = trim(" + esc(empresa_app_nome) + ") LIMIT 1)" if empresa_app_nome else "NULL"
+            vals = [
+                sql_val(row.get("bubble_unique_id", ""), "bubble_unique_id"),
+                empresa_web_id,
+                empresa_app_id,
+            ]
+            for c in USUARIOS_COLS:
+                if c == "bubble_unique_id":
+                    continue
+                vals.append(sql_val(row.get(c, ""), c))
+            cols = ["bubble_unique_id", "empresa_web_id", "empresa_app_id"] + [c for c in USUARIOS_COLS if c != "bubble_unique_id"]
+            out.append("INSERT INTO usuarios (" + ", ".join(cols) + ")")
+            out.append("VALUES (" + ", ".join(vals) + ");")
+        out.append("")
+        out.append(f"-- {len(u_rows)} usuarios")
+        out.append("")
+        n_usu = len(u_rows)
+    else:
+        n_usu = 0
+        out.append("-- (usuarios.csv nao encontrado; pule esta secao)")
+        out.append("")
+
     out.append("-- Assinaturas (empresa_id por subquery em nome)")
     out.append("")
 
@@ -101,9 +148,9 @@ def main():
         raise SystemExit(f"Arquivo não encontrado: {assinaturas_csv}")
 
     with open(assinaturas_csv, newline="", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+        assinaturas_rows = list(csv.DictReader(f))
 
-    for row in rows:
+    for row in assinaturas_rows:
         empresa_nome = (row.get("empresa_nome") or "").strip().replace("'", "''")
         vals = [
             "(SELECT id FROM empresas WHERE trim(nome) = trim(" + esc(empresa_nome) + ") LIMIT 1)",
@@ -123,7 +170,7 @@ def main():
         out.append("VALUES (" + ", ".join(vals) + ");")
 
     OUT_SQL.write_text("\n".join(out), encoding="utf-8")
-    print(f"Gerado {OUT_SQL} ({len(rows)} assinaturas)")
+    print(f"Gerado {OUT_SQL} ({len(empresas_rows)} empresas, {n_usu} usuarios, {len(assinaturas_rows)} assinaturas)")
 
 
 if __name__ == "__main__":
